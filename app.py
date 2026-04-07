@@ -88,14 +88,14 @@ st.markdown(f"""
     <style>
     .stApp {{ background-color: #9d2933; }}
     
-    .block-container {{
+.block-container {{
         background-image: {bg_css};
-        background-size: 100% auto;
+        background-size: 100% 100%; /* 關鍵修改：強制圖片拉伸填滿整個高度 */
         background-repeat: no-repeat;
         max-width: 420px !important; 
-        min-height: 850px !important;
+        min-height: 85vh !important; /* 讓高度根據手機螢幕自動適應 */
         margin: auto; 
-        padding: 320px 45px 50px 45px !important;
+        padding: 260px 30px 50px 30px !important; /* 縮小留白，適應所有手機 */
         border-radius: 20px; 
     }}
     
