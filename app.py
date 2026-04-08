@@ -85,14 +85,14 @@ img_data = get_base64_image("Whee In The Test.png")
 bg_css = f'url("data:image/png;base64,{img_data}")' if img_data else "none"
 
 st.markdown(f"""
-  <style>
+ <style>
     /* 徹底隱藏頂部選單，不讓它干擾輝人的標題 */
     header {{ visibility: hidden !important; height: 0px !important; }}
     
     .stApp {{ background-color: #9d2933; }}
     
     .block-container {{
-        background-image: {bg_css}; /* 只有這裡是單括號，負責呼叫圖片變數 */
+        background-image: {bg_css}; /* 只有這裡是單括號，因為它是變數 */
         /* 保持原比例，絕不變形，絕不裁切 */
         background-size: 100% auto !important; 
         background-position: top center !important; 
@@ -105,6 +105,35 @@ st.markdown(f"""
         /* 稍微將內容往上提，預留下方空間給小手機 */
         padding: 240px 20px 20px 20px !important; 
     }}
+    
+    /* 題目區塊緊湊化 */
+    .stMarkdown {{
+        background-color: rgba(255, 255, 255, 0.5);
+        padding: 5px 15px !important; 
+        border-radius: 10px; 
+        margin-bottom: 5px !important; 
+    }}
+    
+    /* 讓選項按鈕變精緻，大幅縮減垂直佔用的空間 */
+    .stButton > button {{ 
+        width: 100%; 
+        border-radius: 12px; 
+        background: rgba(255, 255, 255, 0.95); 
+        color: #b71c1c; 
+        font-weight: bold; 
+        border: 1.5px solid #b71c1c;
+        padding: 6px 10px !important; 
+        margin-bottom: -5px !important; 
+        font-size: 0.9em !important; 
+    }}
+    
+    .result-box {{ 
+        background: rgba(255,255,255,0.9); padding: 20px; 
+        border-radius: 20px; text-align: center; color: black; border: 2px solid #b71c1c;
+    }}
+    .result-box h1 {{ font-size: 1.8em; margin-bottom: 10px; }}
+    .result-box p {{ font-size: 0.95em; line-height: 1.6; }}
+    </style>
     
     /* 題目區塊緊湊化 */
     .stMarkdown {{
