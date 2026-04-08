@@ -3,7 +3,6 @@ import base64
 import random
 from collections import Counter
 
-# 設定網頁標題與圖示
 st.set_page_config(page_title="輝人靈魂視角測驗", page_icon="🐶")
 
 # --- 1. 圖片處理函數 ---
@@ -95,12 +94,10 @@ bg_footer = f'url("data:image/png;base64,{img_footer}")' if img_footer else "non
 
 st.markdown(f"""
     <style>
-    /* 隱藏標準 Streamlit 元素 */
     header {{ visibility: hidden !important; height: 0px !important; }}
     #MainMenu {{ visibility: hidden !important; }}
     footer {{ visibility: hidden !important; }}
     
-    /* 背景圖直接貼在最底層牆壁上 */
     .stApp {{ 
         background-color: #9d2933;
         background-image: {bg_header}, {bg_footer}, {bg_middle} !important;
@@ -109,26 +106,29 @@ st.markdown(f"""
         background-size: min(100%, 420px) auto, min(100%, 420px) auto, min(100%, 420px) auto !important; 
     }}
     
-    /* 裝文字的透明盒子 */
     .block-container {{
         background: transparent !important; 
         max-width: 420px !important; 
         min-height: 100vh !important;
         margin: auto; 
-        /* 上方空出 220px 避開照片，下方 300px 保護貓咪 */
-        padding: 220px 20px 300px 20px !important; 
+        /* 【關鍵修改1】上方加碼到 380px，絕對不會擋到臉！下方維持 300px 保護貓咪 */
+        padding: 380px 20px 300px 20px !important; 
     }}
     
-    /* 只給題目文字段落加上半透明底色 */
-    .stMarkdown p {{
-        background-color: rgba(255, 255, 255, 0.5);
-        padding: 5px 15px !important; 
-        border-radius: 10px; 
-        margin-bottom: 5px !important; 
-        color: black !important;
+    /* 【關鍵修改2】把無差別的 .stMarkdown p 刪除，改成專屬的題目框框 */
+    .question-box {{
+        background-color: rgba(255, 255, 255, 0.85); 
+        padding: 15px 20px !important; 
+        border-radius: 15px; 
+        margin-bottom: 20px !important; 
+        color: #b71c1c !important;
+        font-weight: bold;
+        font-size: 1.1em;
+        text-align: center;
+        border: 2px dashed #b71c1c; /* 加上可愛的虛線邊框 */
+        box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
     }}
     
-    /* 選項按鈕精緻化 */
     .stButton > button {{ 
         width: 100%; 
         border-radius: 12px; 
@@ -136,39 +136,22 @@ st.markdown(f"""
         color: #b71c1c; 
         font-weight: bold; 
         border: 1.5px solid #b71c1c;
-        padding: 6px 10px !important; 
+        padding: 8px 10px !important; 
         margin-bottom: -5px !important; 
-        font-size: 0.9em !important; 
+        font-size: 0.95em !important; 
     }}
     
-    /* 結果畫面精緻化 (獨立純白底色) */
     .result-box {{ 
-        background: rgba(255,255,255,0.95) !important; 
-        padding: 25px; 
-        border-radius: 20px; 
-        text-align: center; 
-        border: 2px solid #b71c1c;
-        margin-top: 20px;
+        background: rgba(255,255,255,0.95); padding: 25px; 
+        border-radius: 20px; text-align: center; color: black !important; border: 2px solid #b71c1c;
+        box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
     }}
-    
-    .result-box h1, .result-box h2 {{ 
-        color: black !important; 
-        margin-bottom: 15px; 
-    }}
-    
-    /* 強制清除結果描述文字繼承的半透明底色，讓它融入純白背景 */
-    .result-box .stMarkdown p, .result-box p {{ 
-        background-color: transparent !important; 
-        padding: 0 !important; 
-        color: black !important; 
-        font-size: 0.95em; 
-        line-height: 1.6; 
-        margin: 0 !important;
-    }}
+    .result-box h1 {{ font-size: 1.8em; margin-bottom: 15px; color: black !important; }}
+    .result-box p {{ font-size: 1em; line-height: 1.6; color: black !important; }}
     </style>
     """, unsafe_allow_html=True)
 
-# --- 4. 客製化貼紙飄落動畫 (快閃一次版) ---
+# --- 4. 客製化貼紙飄落動畫 ---
 def trigger_sticker_animation(sticker_filename):
     sticker_base64 = get_base64_image(sticker_filename)
     if not sticker_base64: return
@@ -204,9 +187,7 @@ def trigger_sticker_animation(sticker_filename):
             opacity: 0; 
         }}
         </style>
-        <div>
-            {sticker_html}
-        </div>
+        <div>{sticker_html}</div>
         """, unsafe_allow_html=True)
 
 # --- 5. 流程控制 ---
@@ -218,7 +199,8 @@ curr_data = LANG_MAP.get(st.session_state.lang, LANG_MAP["繁體中文"])
 
 # A. 語言選擇畫面
 if st.session_state.step == -1:
-    st.markdown("<h3 style='text-align:center;'>Select Language</h3>", unsafe_allow_html=True)
+    # 語言選擇的標題也套用專屬框框
+    st.markdown("<div class='question-box'>Select Language</div>", unsafe_allow_html=True)
     col1, col2, col3 = st.columns(3)
     if col1.button("繁體中文", use_container_width=True):
         st.session_state.lang = "繁體中文"
@@ -238,7 +220,8 @@ elif st.session_state.step < len(curr_data["questions"]):
     q_idx = st.session_state.step
     q_item = curr_data["questions"][q_idx]
     
-    st.write(f"**{q_item['q']}**")
+    # 【關鍵修改3】把原本的 st.write 改成呼叫自訂的 HTML 框框
+    st.markdown(f"<div class='question-box'>{q_item['q']}</div>", unsafe_allow_html=True)
     
     for text, val in q_item["options"].items():
         if st.button(text, key=f"q_{q_idx}_{val}"):
@@ -252,7 +235,6 @@ else:
     top_choice = counts.most_common(1)[0][0]
     res = curr_data["results"][top_choice]
     
-    # 呼叫快閃貼紙動畫
     trigger_sticker_animation(res['sticker'])
     
     st.markdown(f"""
