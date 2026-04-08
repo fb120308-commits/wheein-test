@@ -10,7 +10,7 @@ def get_base64_image(file_path):
     except: 
         return None
 
-# --- 2. 測驗資料內容 (包含中、韓、英三語系) ---
+# --- 2. 測驗資料內容 ---
 LANG_MAP = {
     "繁體中文": {
         "title": "輝人靈魂視角測驗",
@@ -29,9 +29,9 @@ LANG_MAP = {
             {"q": "10. 你覺得輝人的眼睛最常透露？", "options": {"A. 「我們來玩吧！」": "A", "B. 「你在想什麼？」": "B", "C. 「看著我。」": "C"}}
         ],
         "results": {
-            "A": {"type": " 狗派：可愛元氣", "desc": "在你眼裡，輝人就是那個「定式可愛」的代表。你最容易被她的笑容、酒窩和親和力擊倒。對你來說，她是一個溫暖、真誠的元氣少女，只要她笑，世界就亮了。"},
-            "B": {"type": " 貓派：古靈精怪", "desc": "你最欣賞輝人的藝術家氣質。在她身上你看到高傲卻好奇的靈魂。你著迷於她的神祕與冷靜，即使她「營業不積極」，你也覺得這才是她最迷人的地方。"},
-            "C": {"type": " 狐狸派：極致性感", "desc": "你完全沉溺於輝人的舞台魅力與成熟風情。在你眼裡，她是優雅與性感的化身，眼神與撥髮動作都散發致命誘惑力。她是個讓人想不斷接近的神祕存在。"}
+            "A": {"type": "🐶 狗派：可愛元氣", "desc": "在你眼裡，輝人就是那個「定式可愛」的代表。你最容易被她的笑容、酒窩和親和力擊倒。對你來說，她是一個溫暖、真誠的元氣少女，只要她笑，世界就亮了。"},
+            "B": {"type": "🐱 貓派：古靈精怪", "desc": "你最欣賞輝人的藝術家氣質。在她身上你看到高傲卻好奇的靈魂。你著迷於她的神祕與冷靜，即使她「營業不積極」，你也覺得這才是她最迷人的地方。"},
+            "C": {"type": "🦊 狐狸派：極致性感", "desc": "你完全沉溺於輝人的舞台魅力與成熟風情。在你眼裡，她是優雅與性感的化身，眼神與撥髮動作都散發致命誘惑力。她是個讓人想不斷接近的神祕存在。"}
         }
     },
     "한국어": {
@@ -51,9 +51,9 @@ LANG_MAP = {
             {"q": "10. 휘인의 눈빛이 가장 자주 보내는 신호는?", "options": {"A. '우리 같이 놀자!'": "A", "B. '무슨 생각 해?'": "B", "C. '나만 바라봐.'": "C"}}
         ],
         "results": {
-            "A": {"type": " 강아지파", "desc": "당신의 눈에 휘인은 '정석 귀요미' 그 자체입니다. 그녀의 미소와 보조개에 가장 쉽게 매료됩니다. 당신에게 휘인은 따뜻하고 에너지 넘치는 소녀로, 그녀가 웃으면 세상이 환해진다고 느낍니다."},
-            "B": {"type": " 고양이파", "desc": "당신은 휘인의 예술가적 기질을 가장 아낍니다. 당신 눈에 그녀는 고고하면서도 호기심 많은 고양이 같습니다. 독특한 취향을 가진 그녀의 신비로움과 무심함조차 가장 큰 매력이라고 생각합니다."},
-            "C": {"type": " 여우파", "desc": "당신은 휘인의 무대 위 아우라와 성숙한 분위기에 완전히 빠져 있습니다. 그녀는 우아함과 섹시함의 결정체입니다. 눈빛 하나에도 치명적인 유혹이 서려 있으며, 깊이를 알 수 없는 신비로운 존재입니다."}
+            "A": {"type": "🐶 강아지파", "desc": "당신의 눈에 휘인은 '정석 귀요미' 그 자체입니다. 그녀의 미소와 보조개에 가장 쉽게 매료됩니다. 당신에게 휘인은 따뜻하고 에너지 넘치는 소녀로, 그녀가 웃으면 세상이 환해진다고 느낍니다."},
+            "B": {"type": "🐱 고양이파", "desc": "당신은 휘인의 예술가적 기질을 가장 아낍니다. 당신 눈에 그녀는 고고하면서도 호기심 많은 고양이 같습니다. 독특한 취향을 가진 그녀의 신비로움과 무심함조차 가장 큰 매력이라고 생각합니다."},
+            "C": {"type": "🦊 여우파", "desc": "당신은 휘인의 무대 위 아우라와 성숙한 분위기에 완전히 빠져 있습니다. 그녀는 우아함과 섹시함의 결정체입니다. 눈빛 하나에도 치명적인 유혹이 서려 있으며, 깊이를 알 수 없는 신비로운 존재입니다."}
         }
     },
     "English": {
@@ -69,209 +69,4 @@ LANG_MAP = {
             {"q": "6. Which fashion style does she pull off best?", "options": {"A. Oversized boyish hoodies and caps.": "A", "B. Bright colors and street-graffiti look.": "B", "C. Slim-fit blazers with mystery.": "C"}},
             {"q": "7. One song request at the end of a concert?", "options": {"A. 〈Wheee〉": "A", "B. 〈EASY〉 (ft. Sik-K)": "B", "C. 〈Shhh〉": "C"}},
             {"q": "8. What do you think her tattoos represent?", "options": {"A. Pure love for life and longing for freedom.": "A", "B. Unique artist soul and quirky aesthetics.": "B", "C. Maturity and mystery, a woman with a story.": "C"}},
-            {"q": "9. Her role within MAMAMOO's group performances?", "options": {"A. The Sweetheart bridging emotions.": "A", "B. The Maverick bringing surprises.": "B", "C. The Soul adding jazz and sexy aura.": "C"}},
-            {"q": "10. What message do her eyes usually send?", "options": {"A. 'Let's play!'": "A", "B. 'What are you thinking?'": "B", "C. 'Look at me.'": "C"}}
-        ],
-        "results": {
-            "A": {"type": " Puppy Type", "desc": "In your eyes, Whee In is the definition of 'Standard Cuteness.' You're easily defeated by her smile and dimples."},
-            "B": {"type": " Cat Type", "desc": "You admire her artistic temperament and 'one-of-a-kind' soul. To you, she's like a proud yet curious cat."},
-            "C": {"type": " Fox Type", "desc": "You're completely immersed in her stage presence and mature allure. In your eyes, she is the incarnation of elegance."}
-        }
-    }
-}
-
-# --- 3. CSS 樣式設定 (雙括號完全防錯版) ---
-img_data = get_base64_image("Whee In The Test.png")
-bg_css = f'url("data:image/png;base64,{img_data}")' if img_data else "none"
-
-st.markdown(f"""
- <style>
-    /* 徹底隱藏頂部選單，不讓它干擾輝人的標題 */
-    header {{ visibility: hidden !important; height: 0px !important; }}
-    
-    .stApp {{ background-color: #9d2933; }}
-    
-    .block-container {{
-        background-image: {bg_css}; /* 只有這裡是單括號，因為它是變數 */
-        /* 保持原比例，絕不變形，絕不裁切 */
-        background-size: 100% auto !important; 
-        background-position: top center !important; 
-        background-repeat: no-repeat !important;
-        
-        max-width: 420px !important; 
-        min-height: 100vh !important;
-        
-        margin: auto; 
-        /* 稍微將內容往上提，預留下方空間給小手機 */
-        padding: 240px 20px 20px 20px !important; 
-    }}
-    
-    /* 題目區塊緊湊化 */
-    .stMarkdown {{
-        background-color: rgba(255, 255, 255, 0.5);
-        padding: 5px 15px !important; 
-        border-radius: 10px; 
-        margin-bottom: 5px !important; 
-    }}
-    
-    /* 讓選項按鈕變精緻，大幅縮減垂直佔用的空間 */
-    .stButton > button {{ 
-        width: 100%; 
-        border-radius: 12px; 
-        background: rgba(255, 255, 255, 0.95); 
-        color: #b71c1c; 
-        font-weight: bold; 
-        border: 1.5px solid #b71c1c;
-        padding: 6px 10px !important; 
-        margin-bottom: -5px !important; 
-        font-size: 0.9em !important; 
-    }}
-    
-    .result-box {{ 
-        background: rgba(255,255,255,0.9); padding: 20px; 
-        border-radius: 20px; text-align: center; color: black; border: 2px solid #b71c1c;
-    }}
-    .result-box h1 {{ font-size: 1.8em; margin-bottom: 10px; }}
-    .result-box p {{ font-size: 0.95em; line-height: 1.6; }}
-    </style>
-    
-    /* 題目區塊緊湊化 */
-    .stMarkdown {{
-        background-color: rgba(255, 255, 255, 0.5);
-        padding: 5px 15px !important; 
-        border-radius: 10px; 
-        margin-bottom: 5px !important; /* 縮減與下方按鈕的距離 */
-    }}
-    
-    /* 讓選項按鈕變精緻，大幅縮減垂直佔用的空間 */
-    .stButton > button {{ 
-        width: 100%; 
-        border-radius: 12px; 
-        background: rgba(255, 255, 255, 0.95); 
-        color: #b71c1c; 
-        font-weight: bold; 
-        border: 1.5px solid #b71c1c;
-        padding: 6px 10px !important; /* 縮小按鈕內部的上下留白 */
-        margin-bottom: -5px !important; /* 縮小按鈕之間的距離 */
-        font-size: 0.9em !important; /* 字體微調，適應小手機排版 */
-    }}
-    
-    .result-box {{ 
-        background: rgba(255,255,255,0.9); padding: 20px; 
-        border-radius: 20px; text-align: center; color: black; border: 2px solid #b71c1c;
-    }}
-    .result-box h1 {{ font-size: 1.8em; margin-bottom: 10px; }}
-    .result-box p {{ font-size: 0.95em; line-height: 1.6; }}
-    </style>
-    
-    /* 讓選項按鈕變精緻，大幅縮減垂直佔用的空間 */
-    .stButton > button { 
-        width: 100%; 
-        border-radius: 12px; 
-        background: rgba(255, 255, 255, 0.95); 
-        color: #b71c1c; 
-        font-weight: bold; 
-        border: 1.5px solid #b71c1c;
-        padding: 6px 10px !important; /* 縮小按鈕內部的上下留白 */
-        margin-bottom: -5px !important; /* 縮小按鈕之間的距離 */
-        font-size: 0.9em !important; /* 字體微調，適應小手機排版 */
-    }
-    
-    .result-box { 
-        background: rgba(255,255,255,0.9); padding: 20px; 
-        border-radius: 20px; text-align: center; color: black; border: 2px solid #b71c1c;
-    }
-    .result-box h1 { font-size: 1.8em; margin-bottom: 10px; }
-    .result-box p { font-size: 0.95em; line-height: 1.6; }
-    </style>
-    
-    /* 這裡只針對文字加底色，沒有幽靈透明框了 */
-    .stMarkdown {{
-        background-color: rgba(255, 255, 255, 0.5);
-        padding: 5px 15px; 
-        border-radius: 10px; 
-    }}
-    
-    .stButton > button {{ 
-        width: 100%; border-radius: 15px; background: white; 
-        color: #b71c1c; font-weight: bold; border: 1.5px solid #b71c1c;
-    }}
-    
-    /* 結果呈現框 (所有括號都已使用雙括號防錯) */
-    .result-box {{ 
-        background: rgba(255,255,255,0.9); padding: 20px; 
-        border-radius: 20px; text-align: center; color: black; border: 2px solid #b71c1c;
-    }}
-    
-    .result-box h1 {{
-        font-size: 1.8em; 
-        margin-bottom: 10px;
-    }}
-    
-    .result-box p {{
-        font-size: 0.95em; 
-        line-height: 1.6;  
-    }}
-    </style>
-    """, unsafe_allow_html=True)
-
-# --- 4. 流程控制 ---
-if 'step' not in st.session_state: st.session_state.step = -1
-if 'answers' not in st.session_state: st.session_state.answers = []
-if 'lang' not in st.session_state: st.session_state.lang = "繁體中文"
-
-# 根據選擇的語言載入資料
-curr_data = LANG_MAP.get(st.session_state.lang, LANG_MAP["繁體中文"])
-
-# A. 語言選擇畫面
-if st.session_state.step == -1:
-    st.markdown("<h3 style='text-align:center;'>Select Language</h3>", unsafe_allow_html=True)
-    col1, col2, col3 = st.columns(3)
-    # 使用按鈕選擇語言並更新狀態
-    if col1.button("繁體中文", use_container_width=True):
-        st.session_state.lang = "繁體中文"
-        st.session_state.step = 0
-        st.rerun()
-    if col2.button("한국어", use_container_width=True):
-        st.session_state.lang = "한국어"
-        st.session_state.step = 0
-        st.rerun()
-    if col3.button("English", use_container_width=True):
-        st.session_state.lang = "English"
-        st.session_state.step = 0
-        st.rerun()
-
-# B. 題目進行畫面
-elif st.session_state.step < len(curr_data["questions"]):
-    q_idx = st.session_state.step
-    q_item = curr_data["questions"][q_idx]
-    st.progress((q_idx + 1) / len(curr_data["questions"]))
-    st.write(f"**{q_item['q']}**")
-    for text, val in q_item["options"].items():
-        if st.button(text, key=f"q_{q_idx}_{val}"):
-            st.session_state.answers.append(val)
-            st.session_state.step += 1
-            st.rerun()
-
-# C. 結果顯示畫面
-else:
-    counts = Counter(st.session_state.answers)
-    top_choice = counts.most_common(1)[0][0]
-    res = curr_data["results"][top_choice]
-    
-    st.balloons()
-    st.markdown(f"""
-        <div class='result-box'>
-            <h1>{res['type']}</h1>
-            <p>{res['desc']}</p>
-        </div>
-    """, unsafe_allow_html=True)
-    
-    
-    # 將重新測驗按鈕置中
-    col1, col2, col3 = st.columns([1, 1.5, 1])
-    with col2:
-        if st.button(curr_data["restart_btn"], use_container_width=True):
-            st.session_state.step = -1
-            st.session_state.answers = []
-            st.rerun()
+            {"q": "9. Her role within MAMAMOO's group performances?", "options":
