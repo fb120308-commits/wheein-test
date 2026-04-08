@@ -65,4 +65,150 @@ LANG_MAP = {
         "questions": [
             {"q": "1. Whee In's bare-faced selfie pinching her cheeks, your reaction?", "options": {"A. AHH! So soft and squishy!": "A", "B. Hilarious; only she pulls off that angle.": "B", "C. Chic aura, her eyes tell a story.": "C"}},
             {"q": "2. Moment with Ggomo that impressed you most?", "options": {"A. Whee In talking while Ggomo ignores her.": "A", "B. Both giving off a 'doing my own thing' vibe.": "B", "C. Tender yet elegant pride when holding him.": "C"}},
-            {"q": "3. What attracts you most during her stage performances?", "options": {"A. Genuine enjoyment and heartfelt smile.": "A", "B. Unique stage swagger
+            {"q": "3. What attracts you most during her stage performances?", "options": {"A. Genuine enjoyment and heartfelt smile.": "A", "B. Unique stage swagger and ad-libs.": "B", "C. 'Stage-master' confidence and allure.": "C"}},
+            {"q": "4. How would you describe her voice quality?", "options": {"A. Afternoon sunshine—warm and healing.": "A", "B. Specialty coffee—complex and layered.": "B", "C. Aged red wine—silky and intoxicating.": "C"}},
+            {"q": "5. What do you love most in her variety show footage?", "options": {"A. Uninhibited laughter with deep dimples.": "A", "B. Sudden quirky '4D' comments or roasts.": "B", "C. Staying elegant amidst the chaos.": "C"}},
+            {"q": "6. Which fashion style does she pull off best?", "options": {"A. Oversized boyish hoodies and caps.": "A", "B. Bright colors and street-graffiti look.": "B", "C. Slim-fit blazers with mystery.": "C"}},
+            {"q": "7. One song request at the end of a concert?", "options": {"A. 〈Wheee〉": "A", "B. 〈EASY〉 (ft. Sik-K)": "B", "C. 〈Shhh〉": "C"}},
+            {"q": "8. What do you think her tattoos represent?", "options": {"A. Pure love for life and longing for freedom.": "A", "B. Unique artist soul and quirky aesthetics.": "B", "C. Maturity and mystery, a woman with a story.": "C"}},
+            {"q": "9. Her role within MAMAMOO's group performances?", "options": {"A. The Sweetheart bridging emotions.": "A", "B. The Maverick bringing surprises.": "B", "C. The Soul adding jazz and sexy aura.": "C"}},
+            {"q": "10. What message do her eyes usually send?", "options": {"A. 'Let's play!'": "A", "B. 'What are you thinking?'": "B", "C. 'Look at me.'": "C"}}
+        ],
+        "results": {
+            "A": {"type": " Puppy Type", "desc": "In your eyes, Whee In is the definition of 'Standard Cuteness.' You're easily defeated by her smile and dimples."},
+            "B": {"type": " Cat Type", "desc": "You admire her artistic temperament and 'one-of-a-kind' soul. To you, she's like a proud yet curious cat."},
+            "C": {"type": " Fox Type", "desc": "You're completely immersed in her stage presence and mature allure. In your eyes, she is the incarnation of elegance."}
+        }
+    }
+}
+
+# --- 3. CSS 樣式設定 (終極純淨版) ---
+img_header = get_base64_file("Header.png")
+img_middle = get_base64_file("Middle.png")
+img_footer = get_base64_file("Footer.png")
+
+bg_header = f'url("data:image/png;base64,{img_header}")' if img_header else "none"
+bg_middle = f'url("data:image/png;base64,{img_middle}")' if img_middle else "none"
+bg_footer = f'url("data:image/png;base64,{img_footer}")' if img_footer else "none"
+
+st.markdown(f"""
+    <style>
+    /* 隱藏頂部選單 */
+    header {{ visibility: hidden !important; height: 0px !important; }}
+    
+    .stApp {{ 
+        background-color: #9d2933;
+        background-image: {bg_header}, {bg_footer}, {bg_middle} !important;
+        background-position: top center, bottom center, top center !important;
+        background-repeat: no-repeat, no-repeat, repeat-y !important;
+        background-size: min(100%, 420px) auto, min(100%, 420px) auto, min(100%, 420px) auto !important; 
+    }}
+    
+    .block-container {{
+        background: transparent !important; 
+        max-width: 420px !important; 
+        min-height: 100vh !important;
+        margin: auto; 
+        padding: 280px 20px 300px 20px !important; 
+    }}
+    
+    .stMarkdown p {{
+        background-color: rgba(255, 255, 255, 0.5);
+        padding: 5px 15px !important; 
+        border-radius: 10px; 
+        margin-bottom: 5px !important; 
+    }}
+    
+    .stButton > button {{ 
+        width: 100%; 
+        border-radius: 12px; 
+        background: rgba(255, 255, 255, 0.95); 
+        color: #b71c1c; 
+        font-weight: bold; 
+        border: 1.5px solid #b71c1c;
+        padding: 6px 10px !important; 
+        margin-bottom: -5px !important; 
+        font-size: 0.9em !important; 
+    }}
+    
+    .result-box {{ 
+        background: rgba(255,255,255,0.9); padding: 20px; 
+        border-radius: 20px; text-align: center; color: black; border: 2px solid #b71c1c;
+    }}
+    .result-box h1 {{ font-size: 1.8em; margin-bottom: 10px; }}
+    .result-box p {{ font-size: 0.95em; line-height: 1.6; }}
+    </style>
+    """, unsafe_allow_html=True)
+
+# --- 3.5 背景音樂 (BGM) 絕對定位版本 ---
+audio_base64 = get_base64_file("bgm.mp3")
+if audio_base64:
+    # 這裡的 top: 220px 如果不夠準，你可以隨時修改數字 (例如改成 200px 往上，或 240px 往下)
+    audio_html = f"""
+        <div style="position: absolute; top: 220px; left: 50%; transform: translateX(-50%); z-index: 100;">
+            <audio controls autoplay loop style="height: 35px; width: 250px; opacity: 0.8; box-shadow: 0px 2px 10px rgba(0,0,0,0.1); border-radius: 20px;">
+                <source src="data:audio/mp3;base64,{audio_base64}" type="audio/mp3">
+            </audio>
+        </div>
+    """
+    st.markdown(audio_html, unsafe_allow_html=True)
+
+# --- 4. 流程控制 ---
+if 'step' not in st.session_state: st.session_state.step = -1
+if 'answers' not in st.session_state: st.session_state.answers = []
+if 'lang' not in st.session_state: st.session_state.lang = "繁體中文"
+
+curr_data = LANG_MAP.get(st.session_state.lang, LANG_MAP["繁體中文"])
+
+# A. 語言選擇畫面
+if st.session_state.step == -1:
+    st.markdown("<h3 style='text-align:center;'>Select Language</h3>", unsafe_allow_html=True)
+    col1, col2, col3 = st.columns(3)
+    if col1.button("繁體中文", use_container_width=True):
+        st.session_state.lang = "繁體中文"
+        st.session_state.step = 0
+        st.rerun()
+    if col2.button("한국어", use_container_width=True):
+        st.session_state.lang = "한국어"
+        st.session_state.step = 0
+        st.rerun()
+    if col3.button("English", use_container_width=True):
+        st.session_state.lang = "English"
+        st.session_state.step = 0
+        st.rerun()
+
+# B. 題目進行畫面
+elif st.session_state.step < len(curr_data["questions"]):
+    q_idx = st.session_state.step
+    q_item = curr_data["questions"][q_idx]
+    
+    st.write(f"**{q_item['q']}**")
+    
+    for text, val in q_item["options"].items():
+        if st.button(text, key=f"q_{q_idx}_{val}"):
+            st.session_state.answers.append(val)
+            st.session_state.step += 1
+            st.rerun()
+
+# C. 結果顯示畫面
+else:
+    counts = Counter(st.session_state.answers)
+    top_choice = counts.most_common(1)[0][0]
+    res = curr_data["results"][top_choice]
+    
+    st.balloons()
+    st.markdown(f"""
+        <div class='result-box'>
+            <h1>{res['type']}</h1>
+            <p>{res['desc']}</p>
+        </div>
+    """, unsafe_allow_html=True)
+    
+    st.write("") 
+    
+    col1, col2, col3 = st.columns([1, 1.5, 1])
+    with col2:
+        if st.button(curr_data["restart_btn"], use_container_width=True):
+            st.session_state.step = -1
+            st.session_state.answers = []
+            st.rerun()
