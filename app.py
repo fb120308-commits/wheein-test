@@ -80,7 +80,7 @@ LANG_MAP = {
     }
 }
 
-# --- 3. CSS 樣式設定 ---
+# --- 3. CSS 樣式設定 (終極純淨版) ---
 img_header = get_base64_image("Header.png")
 img_middle = get_base64_image("Middle.png")
 img_footer = get_base64_image("Footer.png")
@@ -163,12 +163,12 @@ if st.session_state.step == -1:
         st.session_state.step = 0
         st.rerun()
 
-# B. 題目進行畫面
+# B. 題目進行畫面 (進度條已刪除)
 elif st.session_state.step < len(curr_data["questions"]):
     q_idx = st.session_state.step
     q_item = curr_data["questions"][q_idx]
     
-    # 直接印出題目，沒有進度條
+    # 直接印出題目，沒有進度條了
     st.write(f"**{q_item['q']}**")
     
     for text, val in q_item["options"].items():
