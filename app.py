@@ -159,7 +159,7 @@ st.markdown(f"""
     .result-box p {{ 
         font-size: 0.95em; 
         line-height: 1.6; 
-        margin-top: -3px !important; 
+        margin-top: -10px !important; 
     }}
     </style>
     """, unsafe_allow_html=True)
