@@ -80,7 +80,7 @@ LANG_MAP = {
     }
 }
 
-# --- 3. CSS 樣式設定 (終極 3 張圖完美定位版) ---
+# --- 3. CSS 樣式設定 ---
 img_header = get_base64_image("Header.png")
 img_middle = get_base64_image("Middle.png")
 img_footer = get_base64_image("Footer.png")
@@ -91,10 +91,9 @@ bg_footer = f'url("data:image/png;base64,{img_footer}")' if img_footer else "non
 
 st.markdown(f"""
     <style>
-    /* 隱藏頂部選單，不干擾設計 */
+    /* 隱藏頂部選單 */
     header {{ visibility: hidden !important; height: 0px !important; }}
     
-    /* 背景圖直接貼在最底層牆壁上，絕不變形跑版 */
     .stApp {{ 
         background-color: #9d2933;
         background-image: {bg_header}, {bg_footer}, {bg_middle} !important;
@@ -103,17 +102,15 @@ st.markdown(f"""
         background-size: min(100%, 420px) auto, min(100%, 420px) auto, min(100%, 420px) auto !important; 
     }}
     
-    /* 裝文字的透明盒子，加大上下安全距離 */
     .block-container {{
         background: transparent !important; 
         max-width: 420px !important; 
         min-height: 100vh !important;
         margin: auto; 
-        /* 上方空出 320px 保護照片，下方空出 300px 保護貓咪 */
-        padding: 320px 20px 300px 20px !important; 
+        /* 沒了進度條，上方留白改回 280px，下方依舊 300px 保護貓咪 */
+        padding: 280px 20px 300px 20px !important; 
     }}
     
-    /* 只給文字段落加上半透明底色，消滅幽靈框 */
     .stMarkdown p {{
         background-color: rgba(255, 255, 255, 0.5);
         padding: 5px 15px !important; 
@@ -121,7 +118,6 @@ st.markdown(f"""
         margin-bottom: 5px !important; 
     }}
     
-    /* 選項按鈕精緻化 */
     .stButton > button {{ 
         width: 100%; 
         border-radius: 12px; 
@@ -134,7 +130,6 @@ st.markdown(f"""
         font-size: 0.9em !important; 
     }}
     
-    /* 結果畫面精緻化 */
     .result-box {{ 
         background: rgba(255,255,255,0.9); padding: 20px; 
         border-radius: 20px; text-align: center; color: black; border: 2px solid #b71c1c;
@@ -172,8 +167,10 @@ if st.session_state.step == -1:
 elif st.session_state.step < len(curr_data["questions"]):
     q_idx = st.session_state.step
     q_item = curr_data["questions"][q_idx]
-    st.progress((q_idx + 1) / len(curr_data["questions"]))
+    
+    # 直接印出題目，沒有進度條
     st.write(f"**{q_item['q']}**")
+    
     for text, val in q_item["options"].items():
         if st.button(text, key=f"q_{q_idx}_{val}"):
             st.session_state.answers.append(val)
