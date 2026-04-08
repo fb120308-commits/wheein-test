@@ -82,7 +82,7 @@ LANG_MAP = {
     }
 }
 
-# --- 3. CSS 樣式設定 (終極純淨版) ---
+# --- 3. CSS 樣式設定 (深色模式文字防護版) ---
 img_header = get_base64_file("Header.png")
 img_middle = get_base64_file("Middle.png")
 img_footer = get_base64_file("Footer.png")
@@ -111,12 +111,19 @@ st.markdown(f"""
         margin: auto; 
         padding: 280px 20px 300px 20px !important; 
     }}
+
+    /* 強制標題文字顏色，防止被深色模式變白 */
+    h1, h2, h3, h4, h5, h6 {{
+        color: #3d1b1b !important; 
+    }}
     
     .stMarkdown p {{
         background-color: rgba(255, 255, 255, 0.5);
         padding: 5px 15px !important; 
         border-radius: 10px; 
         margin-bottom: 5px !important; 
+        /* 強制內文顏色，防止被深色模式變白 */
+        color: #333333 !important; 
     }}
     
     .stButton > button {{ 
