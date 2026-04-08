@@ -41,13 +41,13 @@ def save_result_to_gsheets(final_type):
     # 4. 接龍更新
     updated_df = pd.concat([existing_df, new_row], ignore_index=True)
     
-    # 5. 寫回雲端 (已移除通知提示)
+    # 5. 寫回雲端
     try:
         conn.update(worksheet="工作表1", data=updated_df, spreadsheet=SHEET_URL)
     except Exception as e:
         pass
 
-# --- 3. 測驗資料內容 ---
+# --- 3. 測驗資料內容 (含語法修正) ---
 LANG_MAP = {
     "繁體中文": {
         "title": "輝人靈魂視角測驗",
@@ -58,7 +58,7 @@ LANG_MAP = {
             {"q": "2. 輝人跟 Ggomo 的互動中，什麼畫面最深刻？", "options": {"A. 輝人跟 Ggomo 說話，牠卻不理她。": "A", "B. 兩者都散發「我行我素」的氛圍。": "B", "C. 抱著 Ggomo 時，溫柔帶點清傲的側臉。": "C"}},
             {"q": "3. 舞台演出中，輝人最吸引你的是？", "options": {"A. 發自內心的享受與開心的笑容。": "A", "B. 旋律即興與獨特的舞台漫步。": "B", "C. 舉手投足間流露出的魅惑感。": "C"}},
             {"q": "4. 你覺得輝人的聲音特質偏向？", "options": {"A. 像午後陽光一樣溫暖治癒。": "A", "B. 像精品咖啡，層次豐富難以捉摸。": "B", "C. 像陳年紅酒，絲滑、迷人且微醺。": "C"}},
-            {"q": "5. 看輝人的花絮或綜藝時，你最喜歡她？", "options": {"A. 毫無顧忌的大笑，笑到酒窩深陷。": "A", "B. 突然冒出的四次元發言或吐槽。": "B", "C. 混難中也能保持優雅成熟的樣子。": "C"}},
+            {"q": "5. 看輝人的花絮或綜藝時，你最喜歡她？", "options": {"A. 毫無顧忌的大笑，笑到酒窩深陷。": "A", "B. 突然冒出的四次元發言或吐槽。": "B", "C. 混亂中也能保持優雅成熟的樣子。": "C"}},
             {"q": "6. 談到時尚風格，你覺得她最能駕馭？", "options": {"A. Oversized Boylish 風衛衣與鴨舌帽。": "A", "B. 色彩鮮豔、剪裁奇特的街頭塗鴉風。": "B", "C. 貼身西裝外套，展現幹練與神祕感。": "C"}},
             {"q": "7. 如果演唱會最後可以點一首歌，你會選？", "options": {"A. 〈Wheee〉": "A", "B. 〈EASY〉 (ft. Sik-K)": "B", "C. 〈Shhh〉": "C"}},
             {"q": "8. 你覺得輝人的刺青代表她的？", "options": {"A. 對生活的純真熱愛與自由渴望。": "A", "B. 藝術家靈魂，帶點怪誕的美。": "B", "C. 成熟、神祕，像一個有故事的女人。": "C"}},
@@ -169,12 +169,13 @@ st.markdown(f"""
     </style>
     """, unsafe_allow_html=True)
 
-# --- 5. 背景音樂 ---
+# --- 5. 背景音樂 (修正：縮小寬度以隱藏進度條) ---
 audio_base64 = get_base64_file("bgm.mp3")
 if audio_base64:
+    # 寬度設定為 44px 即可隱藏進度條，只留下播放鈕
     audio_html = f"""
         <div style="position: relative; z-index: 999; top: -150px; left: -10px; height: 0px;">
-            <audio controls autoplay loop style="height: 35px; width: 230px; opacity: 0.8; border-radius: 20px;">
+            <audio controls autoplay loop style="height: 35px; width: 44px; opacity: 0.85; border-radius: 50%; filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.2));">
                 <source src="data:audio/mp3;base64,{audio_base64}" type="audio/mp3">
             </audio>
         </div>
@@ -220,7 +221,7 @@ else:
     top_choice = counts.most_common(1)[0][0]
     res = curr_data["results"][top_choice]
     
-    # 儲存結果 (靜默存儲，不再跳出提示)
+    # 儲存結果
     if not st.session_state.recorded:
         save_result_to_gsheets(res['type'])
         st.session_state.recorded = True
