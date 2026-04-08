@@ -140,15 +140,15 @@ st.markdown(f"""
     </style>
     """, unsafe_allow_html=True)
 
-# --- 3.5 背景音樂 (BGM) 不佔空間相對浮動版本 ---
+# --- 3.5 背景音樂 (BGM) 完美定位版本 ---
 audio_base64 = get_base64_file("bgm.mp3")
 if audio_base64:
-    # 1. height: -3px; 讓播放器不佔據畫面空間，絕對不會把下面的字往下擠
-    # 2. margin-top: -80px; 讓播放器從原本文字的位置「往上浮」到藍色框框的位置
-    # (如果覺得太高或太低，可以微調 -60px 這個數字，例如改成 -50px 或 -70px)
+    # 這裡使用 top 和 left 來精準控制座標
+    # top: -150px 讓它大幅度往上移到夾子左邊的高度。如果太高或太低，微調這個數字 (例如 -140px 或 -160px)
+    # left: -10px 讓它靠左。如果想再往右一點，可以改成 0px 或 10px
     audio_html = f"""
-        <div style="position: relative; z-index: 999; margin-top: -60px; height: 0px; display: flex; justify-content: center;">
-            <audio controls autoplay loop style="height: 35px; width: 250px; opacity: 0.8; box-shadow: 0px 2px 10px rgba(0,0,0,0.1); border-radius: 20px;">
+        <div style="position: relative; z-index: 999; top: -150px; left: -10px; height: 0px;">
+            <audio controls autoplay loop style="height: 35px; width: 230px; opacity: 0.85; box-shadow: 0px 2px 10px rgba(0,0,0,0.15); border-radius: 20px;">
                 <source src="data:audio/mp3;base64,{audio_base64}" type="audio/mp3">
             </audio>
         </div>
