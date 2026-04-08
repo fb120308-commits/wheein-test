@@ -1,9 +1,14 @@
 import streamlit as st
 import base64
+import random
 from collections import Counter
 
-# --- 1. 圖片處理函數 ---
-def get_base64_image(file_path):
+# 設定網頁標題與圖示
+st.set_page_config(page_title="輝人靈魂視角測驗", page_icon="🐶")
+
+# --- 1. 檔案處理函數 (加入快取加速，確保網頁不卡頓！) ---
+@st.cache_data
+def get_base64_file(file_path):
     try:
         with open(file_path, "rb") as f:
             return base64.b64encode(f.read()).decode()
@@ -29,9 +34,9 @@ LANG_MAP = {
             {"q": "10. 你覺得輝人的眼睛最常透露？", "options": {"A. 「我們來玩吧！」": "A", "B. 「你在想什麼？」": "B", "C. 「看著我。」": "C"}}
         ],
         "results": {
-            "A": {"type": "狗派：可愛元氣", "desc": "在你眼裡，輝人就是那個「定式可愛」的代表。你最容易被她的笑容、酒窩和親和力擊倒。對你來說，她是一個溫暖、真誠的元氣少女，只要她笑，世界就亮了。"},
-            "B": {"type": "貓派：古靈精怪", "desc": "你最欣賞輝人的藝術家氣質。在她身上你看到高傲卻好奇的靈魂。你著迷於她的神祕與冷靜，即使她「營業不積極」，你也覺得這才是她最迷人的地方。"},
-            "C": {"type": "狐狸派：極致性感", "desc": "你完全沉溺於輝人的舞台魅力與成熟風情。在你眼裡，她是優雅與性感的化身，眼神與撥髮動作都散發致命誘惑力。她是個讓人想不斷接近的神祕存在。"}
+            "A": {"type": "🐶 狗派：可愛元氣", "sticker": "貼紙（狗）.png", "desc": "在你眼裡，輝人就是那個「定式可愛」的代表。你最容易被她的笑容、酒窩和親和力擊倒。對你來說，她是一個溫暖、真誠的元氣少女，只要她笑，世界就亮了。"},
+            "B": {"type": "🐱 貓派：古靈精怪", "sticker": "貼紙（貓）.png", "desc": "你最欣賞輝人的藝術家氣質。在她身上你看到高傲卻好奇的靈魂。你著迷於她的神祕與冷靜，即使她「營業不積極」，你也覺得這才是她最迷人的地方。"},
+            "C": {"type": "🦊 狐狸派：極致性感", "sticker": "貼紙（狐狸）.png", "desc": "你完全沉溺於輝人的舞台魅力與成熟風情。在你眼裡，她是優雅與性感的化身，眼神與撥髮動作都散發致命誘惑力。她是個讓人想不斷接近的神祕存在。"}
         }
     },
     "한국어": {
@@ -51,9 +56,9 @@ LANG_MAP = {
             {"q": "10. 휘인의 눈빛이 가장 자주 보내는 신호는?", "options": {"A. '우리 같이 놀자!'": "A", "B. '무슨 생각 해?'": "B", "C. '나만 바라봐.'": "C"}}
         ],
         "results": {
-            "A": {"type": "강아지파", "desc": "당신의 눈에 휘인은 '정석 귀요미' 그 자체입니다. 그녀의 미소와 보조개에 가장 쉽게 매료됩니다. 당신에게 휘인은 따뜻하고 에너지 넘치는 소녀로, 그녀가 웃으면 세상이 환해진다고 느낍니다."},
-            "B": {"type": " 고양이파", "desc": "당신은 휘인의 예술가적 기질을 가장 아낍니다. 당신 눈에 그녀는 고고하면서도 호기심 많은 고양이 같습니다. 독특한 취향을 가진 그녀의 신비로움과 무심함조차 가장 큰 매력이라고 생각합니다."},
-            "C": {"type": " 여우파", "desc": "당신은 휘인의 무대 위 아우라와 성숙한 분위기에 완전히 빠져 있습니다. 그녀는 우아함과 섹시함의 결정체입니다. 눈빛 하나에도 치명적인 유혹이 서려 있으며, 깊이를 알 수 없는 신비로운 존재입니다."}
+            "A": {"type": "🐶 강아지파", "sticker": "貼紙（狗）.png", "desc": "당신의 눈에 휘인은 '정석 귀요미' 그 자체입니다. 그녀의 미소와 보조개에 가장 쉽게 매료됩니다. 당신에게 휘인은 따뜻하고 에너지 넘치는 소녀로, 그녀가 웃으면 세상이 환해진다고 느낍니다."},
+            "B": {"type": "🐱 고양이파", "sticker": "貼紙（貓）.png", "desc": "당신은 휘인의 예술가적 기질을 가장 아낍니다. 당신 눈에 그녀는 고고하면서도 호기심 많은 고양이 같습니다. 독특한 취향을 가진 그녀의 신비로움과 무심함조차 가장 큰 매력이라고 생각합니다."},
+            "C": {"type": "🦊 여우파", "sticker": "貼紙（狐狸）.png", "desc": "당신은 휘인의 무대 위 아우라와 성숙한 분위기에 완전히 빠져 있습니다. 그녀는 우아함과 섹시함의 결정체입니다. 눈빛 하나에도 치명적인 유혹이 서려 있으며, 깊이를 알 수 없는 신비로운 존재입니다."}
         }
     },
     "English": {
@@ -73,26 +78,39 @@ LANG_MAP = {
             {"q": "10. What message do her eyes usually send?", "options": {"A. 'Let's play!'": "A", "B. 'What are you thinking?'": "B", "C. 'Look at me.'": "C"}}
         ],
         "results": {
-            "A": {"type": "Puppy Type", "desc": "In your eyes, Whee In is the definition of 'Standard Cuteness.' You're easily defeated by her smile and dimples."},
-            "B": {"type": "Cat Type", "desc": "You admire her artistic temperament and 'one-of-a-kind' soul. To you, she's like a proud yet curious cat."},
-            "C": {"type": "Fox Type", "desc": "You're completely immersed in her stage presence and mature allure. In your eyes, she is the incarnation of elegance."}
+            "A": {"type": "🐶 Puppy Type", "sticker": "貼紙（狗）.png", "desc": "In your eyes, Whee In is the definition of 'Standard Cuteness.' You're easily defeated by her smile and dimples."},
+            "B": {"type": "🐱 Cat Type", "sticker": "貼紙（貓）.png", "desc": "You admire her artistic temperament and 'one-of-a-kind' soul. To you, she's like a proud yet curious cat."},
+            "C": {"type": "🦊 Fox Type", "sticker": "貼紙（狐狸）.png", "desc": "You're completely immersed in her stage presence and mature allure. In your eyes, she is the incarnation of elegance."}
         }
     }
 }
 
-# --- 3. CSS 樣式設定 (終極純淨版) ---
-img_header = get_base64_image("Header.png")
-img_middle = get_base64_image("Middle.png")
-img_footer = get_base64_image("Footer.png")
+# --- 3. CSS 樣式與背景音樂設定 ---
+img_header = get_base64_file("Header.png")
+img_middle = get_base64_file("Middle.png")
+img_footer = get_base64_file("Footer.png")
+bgm_file = get_base64_file("bgm.mp3") # 讀取剛剛上傳的音樂檔
 
 bg_header = f'url("data:image/png;base64,{img_header}")' if img_header else "none"
 bg_middle = f'url("data:image/png;base64,{img_middle}")' if img_middle else "none"
 bg_footer = f'url("data:image/png;base64,{img_footer}")' if img_footer else "none"
 
+# 產生懸浮音樂播放器
+bgm_html = ""
+if bgm_file:
+    bgm_html = f"""
+    <div class="bgm-player">
+        <audio controls autoplay loop>
+            <source src="data:audio/mp3;base64,{bgm_file}" type="audio/mp3">
+        </audio>
+    </div>
+    """
+
 st.markdown(f"""
     <style>
-    /* 隱藏頂部選單 */
     header {{ visibility: hidden !important; height: 0px !important; }}
+    #MainMenu {{ visibility: hidden !important; }}
+    footer {{ visibility: hidden !important; }}
     
     .stApp {{ 
         background-color: #9d2933;
@@ -107,15 +125,20 @@ st.markdown(f"""
         max-width: 420px !important; 
         min-height: 100vh !important;
         margin: auto; 
-        /* 沒了進度條，上方留白改回 280px，下方依舊 300px 保護貓咪 */
-        padding: 280px 20px 300px 20px !important; 
+        padding: 380px 20px 300px 20px !important; 
     }}
     
-    .stMarkdown p {{
-        background-color: rgba(255, 255, 255, 0.5);
-        padding: 5px 15px !important; 
-        border-radius: 10px; 
-        margin-bottom: 5px !important; 
+    .question-box {{
+        background-color: rgba(255, 255, 255, 0.85); 
+        padding: 15px 20px !important; 
+        border-radius: 15px; 
+        margin-bottom: 20px !important; 
+        color: #b71c1c !important;
+        font-weight: bold;
+        font-size: 1.1em;
+        text-align: center;
+        border: 2px dashed #b71c1c; 
+        box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
     }}
     
     .stButton > button {{ 
@@ -125,21 +148,80 @@ st.markdown(f"""
         color: #b71c1c; 
         font-weight: bold; 
         border: 1.5px solid #b71c1c;
-        padding: 6px 10px !important; 
+        padding: 8px 10px !important; 
         margin-bottom: -5px !important; 
-        font-size: 0.9em !important; 
+        font-size: 0.95em !important; 
     }}
     
     .result-box {{ 
-        background: rgba(255,255,255,0.9); padding: 20px; 
-        border-radius: 20px; text-align: center; color: black; border: 2px solid #b71c1c;
+        background: rgba(255,255,255,0.95); padding: 25px; 
+        border-radius: 20px; text-align: center; color: black !important; border: 2px solid #b71c1c;
+        box-shadow: 2px 2px 10px rgba(0,0,0,0.1);
     }}
-    .result-box h1 {{ font-size: 1.8em; margin-bottom: 10px; }}
-    .result-box p {{ font-size: 0.95em; line-height: 1.6; }}
+    .result-box h1 {{ font-size: 1.8em; margin-bottom: 15px; color: black !important; }}
+    .result-box p {{ font-size: 1em; line-height: 1.6; color: black !important; }}
+
+    /* 隱藏的懸浮音樂播放器專屬樣式 */
+    .bgm-player {{
+        position: fixed;
+        top: 15px;
+        right: 15px;
+        z-index: 9999;
+        opacity: 0.4; /* 平常半透明不干擾視覺 */
+        transition: opacity 0.3s ease;
+    }}
+    .bgm-player:hover {{
+        opacity: 1; /* 碰到的時候變清晰 */
+    }}
+    .bgm-player audio {{
+        height: 32px;
+        width: 130px;
+        outline: none;
+    }}
     </style>
+    {bgm_html}
     """, unsafe_allow_html=True)
 
-# --- 4. 流程控制 ---
+# --- 4. 客製化貼紙飄落動畫 ---
+def trigger_sticker_animation(sticker_filename):
+    sticker_base64 = get_base64_file(sticker_filename)
+    if not sticker_base64: return
+    
+    sticker_html = ""
+    for i in range(15):
+        left = random.randint(5, 85) 
+        delay = random.uniform(0, 0.3) 
+        duration = random.uniform(1.5, 2.5) 
+        
+        sticker_html += f"""
+        <img src="data:image/png;base64,{sticker_base64}" class="custom-sticker" style="
+            left: {left}%; 
+            animation: sticker-fall {duration}s ease-in {delay}s forwards;
+        ">
+        """
+
+    st.markdown(f"""
+        <style>
+        @keyframes sticker-fall {{
+            0% {{ top: -100px; transform: rotate(-15deg) scale(0.8); opacity: 0; }}
+            10% {{ opacity: 1; }}
+            80% {{ opacity: 1; }}
+            100% {{ top: 100vh; transform: rotate(45deg) scale(1.1); opacity: 0; }}
+        }}
+        
+        .custom-sticker {{
+            position: fixed;
+            top: -100px;
+            width: 70px; 
+            z-index: 9999; 
+            pointer-events: none; 
+            opacity: 0; 
+        }}
+        </style>
+        <div>{sticker_html}</div>
+        """, unsafe_allow_html=True)
+
+# --- 5. 流程控制 ---
 if 'step' not in st.session_state: st.session_state.step = -1
 if 'answers' not in st.session_state: st.session_state.answers = []
 if 'lang' not in st.session_state: st.session_state.lang = "繁體中文"
@@ -148,7 +230,7 @@ curr_data = LANG_MAP.get(st.session_state.lang, LANG_MAP["繁體中文"])
 
 # A. 語言選擇畫面
 if st.session_state.step == -1:
-    st.markdown("<h3 style='text-align:center;'>Select Language</h3>", unsafe_allow_html=True)
+    st.markdown("<div class='question-box'>Select Language</div>", unsafe_allow_html=True)
     col1, col2, col3 = st.columns(3)
     if col1.button("繁體中文", use_container_width=True):
         st.session_state.lang = "繁體中文"
@@ -163,13 +245,12 @@ if st.session_state.step == -1:
         st.session_state.step = 0
         st.rerun()
 
-# B. 題目進行畫面 (進度條已刪除)
+# B. 題目進行畫面
 elif st.session_state.step < len(curr_data["questions"]):
     q_idx = st.session_state.step
     q_item = curr_data["questions"][q_idx]
     
-    # 直接印出題目，沒有進度條了
-    st.write(f"**{q_item['q']}**")
+    st.markdown(f"<div class='question-box'>{q_item['q']}</div>", unsafe_allow_html=True)
     
     for text, val in q_item["options"].items():
         if st.button(text, key=f"q_{q_idx}_{val}"):
@@ -183,9 +264,11 @@ else:
     top_choice = counts.most_common(1)[0][0]
     res = curr_data["results"][top_choice]
     
-    st.balloons()
+    trigger_sticker_animation(res['sticker'])
+    
     st.markdown(f"""
         <div class='result-box'>
+            <h2>Result</h2>
             <h1>{res['type']}</h1>
             <p>{res['desc']}</p>
         </div>
