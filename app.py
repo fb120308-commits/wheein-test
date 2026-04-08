@@ -4,7 +4,7 @@ import pandas as pd
 from collections import Counter
 from streamlit_gsheets import GSheetsConnection
 
-# --- 1. 檔案處理函數 (整合圖片與音檔，加入快取優化) ---
+# --- 1. 檔案處理函數 ---
 @st.cache_data
 def get_base64_file(file_path):
     try:
@@ -20,7 +20,7 @@ conn = st.connection("gsheets", type=GSheetsConnection)
 def save_result_to_gsheets(final_type):
     """將測驗結果存入 Google Sheets"""
     try:
-        # 1. 讀取現有資料 (ttl=0 強制抓取最新)
+        # 1. 讀取現有資料
         existing_df = conn.read(spreadsheet=SHEET_URL, ttl=0)
         
         # 2. 清理無效行
@@ -30,7 +30,6 @@ def save_result_to_gsheets(final_type):
             existing_df = pd.DataFrame(columns=["timestamp", "result"])
             
     except Exception as e:
-        st.error(f"連線讀取失敗: {e}")
         return
 
     # 3. 準備新資料
@@ -42,14 +41,13 @@ def save_result_to_gsheets(final_type):
     # 4. 接龍更新
     updated_df = pd.concat([existing_df, new_row], ignore_index=True)
     
-    # 5. 寫回雲端
+    # 5. 寫回雲端 (已移除通知提示)
     try:
         conn.update(worksheet="工作表1", data=updated_df, spreadsheet=SHEET_URL)
-        st.toast(f"統計成功！目前累計 {len(updated_df)} 筆資料", icon="✅")
     except Exception as e:
-        st.error(f"寫入雲端失敗：{e}")
+        pass
 
-# --- 3. 測驗資料內容 (多國語言完整結構) ---
+# --- 3. 測驗資料內容 ---
 LANG_MAP = {
     "繁體中文": {
         "title": "輝人靈魂視角測驗",
@@ -60,7 +58,7 @@ LANG_MAP = {
             {"q": "2. 輝人跟 Ggomo 的互動中，什麼畫面最深刻？", "options": {"A. 輝人跟 Ggomo 說話，牠卻不理她。": "A", "B. 兩者都散發「我行我素」的氛圍。": "B", "C. 抱著 Ggomo 時，溫柔帶點清傲的側臉。": "C"}},
             {"q": "3. 舞台演出中，輝人最吸引你的是？", "options": {"A. 發自內心的享受與開心的笑容。": "A", "B. 旋律即興與獨特的舞台漫步。": "B", "C. 舉手投足間流露出的魅惑感。": "C"}},
             {"q": "4. 你覺得輝人的聲音特質偏向？", "options": {"A. 像午後陽光一樣溫暖治癒。": "A", "B. 像精品咖啡，層次豐富難以捉摸。": "B", "C. 像陳年紅酒，絲滑、迷人且微醺。": "C"}},
-            {"q": "5. 看輝人的花絮或綜藝時，你最喜歡她？", "options": {"A. 毫無顧忌的大笑，笑到酒窩深陷。": "A", "B. 突然冒出的四次元發言或吐槽。": "B", "C. 混亂中也能保持優雅成熟的樣子。": "C"}},
+            {"q": "5. 看輝人的花絮或綜藝時，你最喜歡她？", "options": {"A. 毫無顧忌的大笑，笑到酒窩深陷。": "A", "B. 突然冒出的四次元發言或吐槽。": "B", "C. 混難中也能保持優雅成熟的樣子。": "C"}},
             {"q": "6. 談到時尚風格，你覺得她最能駕馭？", "options": {"A. Oversized Boylish 風衛衣與鴨舌帽。": "A", "B. 色彩鮮豔、剪裁奇特的街頭塗鴉風。": "B", "C. 貼身西裝外套，展現幹練與神祕感。": "C"}},
             {"q": "7. 如果演唱會最後可以點一首歌，你會選？", "options": {"A. 〈Wheee〉": "A", "B. 〈EASY〉 (ft. Sik-K)": "B", "C. 〈Shhh〉": "C"}},
             {"q": "8. 你覺得輝人的刺青代表她的？", "options": {"A. 對生活的純真熱愛與自由渴望。": "A", "B. 藝術家靈魂，帶點怪誕的美。": "B", "C. 成熟、神祕，像一個有故事的女人。": "C"}},
@@ -119,7 +117,7 @@ LANG_MAP = {
     }
 }
 
-# --- 4. CSS 樣式設定 (美化 + 深色模式防護 + 間距優化) ---
+# --- 4. CSS 樣式設定 ---
 img_header = get_base64_file("Header.png")
 img_middle = get_base64_file("Middle.png")
 img_footer = get_base64_file("Footer.png")
@@ -144,7 +142,6 @@ st.markdown(f"""
         padding: 280px 20px 300px 20px !important; 
     }}
     
-    /* 深色模式文字顏色強制防護 */
     h1, h2, h3, h4 {{ color: #3d1b1b !important; text-align: center; }}
     
     .stMarkdown p {{
@@ -159,7 +156,6 @@ st.markdown(f"""
         font-weight: bold; border: 1.5px solid #b71c1c; margin-bottom: 5px;
     }}
 
-    /* 結果顯示框間距優化 */
     .result-box {{ 
         background: rgba(255,255,255,0.9); padding: 20px; border-radius: 20px; 
         text-align: center; color: black; border: 2px solid #b71c1c;
@@ -173,7 +169,7 @@ st.markdown(f"""
     </style>
     """, unsafe_allow_html=True)
 
-# --- 5. 背景音樂 (BGM 定位) ---
+# --- 5. 背景音樂 ---
 audio_base64 = get_base64_file("bgm.mp3")
 if audio_base64:
     audio_html = f"""
@@ -220,15 +216,13 @@ elif st.session_state.step < len(curr_data["questions"]):
 
 # C. 結果顯示
 else:
-    # 這裡就是你問的那一段邏輯大腦
     counts = Counter(st.session_state.answers)
     top_choice = counts.most_common(1)[0][0]
     res = curr_data["results"][top_choice]
     
-    # 儲存結果 (確保單次紀錄)
+    # 儲存結果 (靜默存儲，不再跳出提示)
     if not st.session_state.recorded:
-        with st.spinner('Recording data...'):
-            save_result_to_gsheets(res['type'])
+        save_result_to_gsheets(res['type'])
         st.session_state.recorded = True
 
     st.balloons()
