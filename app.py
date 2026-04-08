@@ -3,6 +3,9 @@ import base64
 import random
 from collections import Counter
 
+# 設定網頁標題與圖示
+st.set_page_config(page_title="輝人靈魂視角測驗", page_icon="🐶")
+
 # --- 1. 圖片處理函數 ---
 def get_base64_image(file_path):
     try:
@@ -92,10 +95,12 @@ bg_footer = f'url("data:image/png;base64,{img_footer}")' if img_footer else "non
 
 st.markdown(f"""
     <style>
+    /* 隱藏標準 Streamlit 元素 */
     header {{ visibility: hidden !important; height: 0px !important; }}
     #MainMenu {{ visibility: hidden !important; }}
     footer {{ visibility: hidden !important; }}
     
+    /* 背景圖直接貼在最底層牆壁上 */
     .stApp {{ 
         background-color: #9d2933;
         background-image: {bg_header}, {bg_footer}, {bg_middle} !important;
@@ -104,28 +109,26 @@ st.markdown(f"""
         background-size: min(100%, 420px) auto, min(100%, 420px) auto, min(100%, 420px) auto !important; 
     }}
     
-.block-container {{
-        background-image: {bg_css};
-        background-size: 100% auto !important; 
-        background-position: top center !important; 
-        background-repeat: no-repeat !important;
+    /* 裝文字的透明盒子 */
+    .block-container {{
+        background: transparent !important; 
         max-width: 420px !important; 
         min-height: 100vh !important;
         margin: auto; 
-        /* 【關鍵修改 1】180px 改成 220px，讓整體內容下移，避開上方照片 */
-        padding: 220px 20px 20px 20px !important; 
+        /* 上方空出 220px 避開照片，下方 300px 保護貓咪 */
+        padding: 220px 20px 300px 20px !important; 
     }}
     
+    /* 只給題目文字段落加上半透明底色 */
     .stMarkdown p {{
         background-color: rgba(255, 255, 255, 0.5);
         padding: 5px 15px !important; 
         border-radius: 10px; 
         margin-bottom: 5px !important; 
+        color: black !important;
     }}
-
-    /* 【關鍵修改 2】最強力的一行！強制移除結果描述文字內部的多餘底色，讓它回歸純淨 */
-    .result-box .stMarkdown p {{ background-color: transparent !important; padding: 0 !important; }}
     
+    /* 選項按鈕精緻化 */
     .stButton > button {{ 
         width: 100%; 
         border-radius: 12px; 
@@ -138,12 +141,30 @@ st.markdown(f"""
         font-size: 0.9em !important; 
     }}
     
+    /* 結果畫面精緻化 (獨立純白底色) */
     .result-box {{ 
-        background: rgba(255,255,255,0.9); padding: 20px; 
-        border-radius: 20px; text-align: center; color: black !important; border: 2px solid #b71c1c;
+        background: rgba(255,255,255,0.95) !important; 
+        padding: 25px; 
+        border-radius: 20px; 
+        text-align: center; 
+        border: 2px solid #b71c1c;
+        margin-top: 20px;
     }}
-    .result-box h1 {{ font-size: 1.8em; margin-bottom: 10px; color: black !important; }}
-    .result-box p {{ font-size: 0.95em; line-height: 1.6; color: black !important; }}
+    
+    .result-box h1, .result-box h2 {{ 
+        color: black !important; 
+        margin-bottom: 15px; 
+    }}
+    
+    /* 強制清除結果描述文字繼承的半透明底色，讓它融入純白背景 */
+    .result-box .stMarkdown p, .result-box p {{ 
+        background-color: transparent !important; 
+        padding: 0 !important; 
+        color: black !important; 
+        font-size: 0.95em; 
+        line-height: 1.6; 
+        margin: 0 !important;
+    }}
     </style>
     """, unsafe_allow_html=True)
 
@@ -153,13 +174,11 @@ def trigger_sticker_animation(sticker_filename):
     if not sticker_base64: return
     
     sticker_html = ""
-    # 產生 15 個貼紙，讓畫面豐富但不雜亂
     for i in range(15):
-        left = random.randint(5, 85) # 避免貼太靠邊緣
-        delay = random.uniform(0, 0.3) # 非常短的延遲，讓它們幾乎同時掉落
-        duration = random.uniform(1.5, 2.5) # 落下的速度加快，2.5秒內全部結束
+        left = random.randint(5, 85) 
+        delay = random.uniform(0, 0.3) 
+        duration = random.uniform(1.5, 2.5) 
         
-        # 使用 img 標籤並直接加上動畫屬性
         sticker_html += f"""
         <img src="data:image/png;base64,{sticker_base64}" class="custom-sticker" style="
             left: {left}%; 
@@ -169,7 +188,6 @@ def trigger_sticker_animation(sticker_filename):
 
     st.markdown(f"""
         <style>
-        /* 定義落下動畫：從上面掉下來，最後消失停留在原地 */
         @keyframes sticker-fall {{
             0% {{ top: -100px; transform: rotate(-15deg) scale(0.8); opacity: 0; }}
             10% {{ opacity: 1; }}
@@ -180,9 +198,9 @@ def trigger_sticker_animation(sticker_filename):
         .custom-sticker {{
             position: fixed;
             top: -100px;
-            width: 70px; /* 貼紙大小 */
+            width: 70px; 
             z-index: 9999; 
-            pointer-events: none; /* 絕對不阻擋點擊按鈕 */
+            pointer-events: none; 
             opacity: 0; 
         }}
         </style>
@@ -234,11 +252,12 @@ else:
     top_choice = counts.most_common(1)[0][0]
     res = curr_data["results"][top_choice]
     
-    # 呼叫快閃貼紙動畫！
+    # 呼叫快閃貼紙動畫
     trigger_sticker_animation(res['sticker'])
     
     st.markdown(f"""
         <div class='result-box'>
+            <h2>Result</h2>
             <h1>{res['type']}</h1>
             <p>{res['desc']}</p>
         </div>
