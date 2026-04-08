@@ -14,33 +14,45 @@ def get_base64_file(file_path):
         return ""
 
 # --- 2. Google Sheets 連線設定 ---
-# ⚠️ 請務必將下方的網址替換成你瀏覽器網址列看到的完整 Google 試算表網址
-SHEET_URL = "https://docs.google.com/spreadsheets/d/18SouKWNtcmN6jt5yOqFq6tbjSUsViBTq8i9k97BhzCc/edit?gid=0#gid=0"
+SHEET_URL = "https://docs.google.com/spreadsheets/d/18SouKWNtcmN6jt5yOqFq6tbjSUsViBTq8i9k97BhzCc/edit?gid=0"
 conn = st.connection("gsheets", type=GSheetsConnection)
 
 def save_result_to_gsheets(final_type):
-    """將測驗結果存入 Google Sheets (解決覆蓋問題版)"""
+    """將測驗結果存入 Google Sheets (解決 10 筆重置問題)"""
     try:
-        # ttl=0 確保每次寫入前都抓到雲端最新的完整清單，而不是快取資料
-        df = conn.read(spreadsheet=SHEET_URL, ttl=0)
-        df = df.dropna(how='all')
+        # 1. 讀取現有資料 (ttl=0 強制抓取最新資料)
+        existing_df = conn.read(spreadsheet=SHEET_URL, ttl=0)
+        
+        # 2. 清理無效行
+        if existing_df is not None:
+            existing_df = existing_df.dropna(how='all')
+        else:
+            existing_df = pd.DataFrame(columns=["timestamp", "result"])
+            
     except Exception as e:
-        # 如果表是空的，建立初始欄位
-        df = pd.DataFrame(columns=["timestamp", "result"])
+        # 如果讀取完全失敗，建立基礎框架，但不建議在此直接更新，以免覆蓋
+        st.error(f"連線讀取失敗，請檢查網路: {e}")
+        return
 
-    # 準備新資料
+    # 3. 準備新資料
     new_data = pd.DataFrame({
         "timestamp": [pd.Timestamp.now(tz='Asia/Taipei').strftime("%Y-%m-%d %H:%M:%S")], 
         "result": [final_type]
     })
     
-    # 執行「接龍」動作：舊資料 + 新資料
-    updated_df = pd.concat([df, new_data], ignore_index=True)
+    # 4. 接龍：舊資料 + 新資料
+    updated_df = pd.concat([existing_df, new_data], ignore_index=True)
     
-    # 寫回 Google Sheets (請確認你的工作表名稱是否為 "工作表1")
-    conn.update(worksheet="工作表1", data=updated_df, spreadsheet=SHEET_URL)
+    # 5. 寫回雲端
+    try:
+        conn.update(worksheet="工作表1", data=updated_df, spreadsheet=SHEET_URL)
+        # 在開發階段可以顯示成功訊息，正式營運後可移除
+        st.toast(f"統計成功！目前累計 {len(updated_df)} 筆資料", icon="✅")
+    except Exception as e:
+        st.error(f"寫入雲端失敗：{e}")
 
-# --- 3. 測驗資料內容 ---
+# --- 3. 測驗資料內容 (已補全結構防止跳題) ---
+# 注意：韓文與英文的部分，我先補齊了 10 題的結構，內容請再自行替換成正確翻譯
 LANG_MAP = {
     "繁體中文": {
         "title": "輝人靈魂視角測驗",
@@ -70,7 +82,15 @@ LANG_MAP = {
         "restart_btn": "다시 하기",
         "questions": [
             {"q": "1. 휘인이 민낯으로 볼을 꼬집으며 찍은 셀카를 올렸을 때 반응은?", "options": {"A. 심쿵! 어쩜 이렇게 말랑콩떡 같지?": "A", "B. 표정이 너무 익살스럽네.": "B", "C. 민낯인데도 눈빛이 깊네.": "C"}},
-            # ... 此處可依格式補全其餘韓文題目
+            {"q": "2. (번역 필요) 휘인과 꼬모의 상호작용 중 가장 기억에 남는 장면은?", "options": {"A": "A", "B": "B", "C": "C"}},
+            {"q": "3. (번역 필요) 무대 위에서 휘인의 어떤 모습에 가장 끌리나요?", "options": {"A": "A", "B": "B", "C": "C"}},
+            {"q": "4. (번역 필요) 휘인의 목소리 특징은 어디에 가깝다고 생각하나요?", "options": {"A": "A", "B": "B", "C": "C"}},
+            {"q": "5. (번역 필요) 비하인드 영상에서 그녀의 어떤 모습을 좋아하나요?", "options": {"A": "A", "B": "B", "C": "C"}},
+            {"q": "6. (번역 필요) 그녀에게 가장 잘 어울리는 패션 스타일은?", "options": {"A": "A", "B": "B", "C": "C"}},
+            {"q": "7. (번역 필요) 콘서트 마지막 곡으로 무엇을 듣고 싶나요?", "options": {"A": "A", "B": "B", "C": "C"}},
+            {"q": "8. (번역 필요) 그녀의 타투가 상징하는 것은 무엇일까요?", "options": {"A": "A", "B": "B", "C": "C"}},
+            {"q": "9. (번역 필요) 그룹 내에서 휘인의 역할은 무엇이라고 생각하나요?", "options": {"A": "A", "B": "B", "C": "C"}},
+            {"q": "10. (번역 필요) 그녀의 눈빛이 가장 자주 말하는 것은?", "options": {"A": "A", "B": "B", "C": "C"}}
         ],
         "results": {
             "A": {"type": "강아지파", "desc": "당신의 눈에 휘인은 '정석 귀요미' 그 자체입니다."},
@@ -84,7 +104,15 @@ LANG_MAP = {
         "restart_btn": "Restart",
         "questions": [
             {"q": "1. Whee In's bare-faced selfie pinching her cheeks, your reaction?", "options": {"A. AHH! So soft and squishy!": "A", "B. Hilarious angle.": "B", "C. Chic aura.": "C"}},
-            # ... 此處可依格式補全其餘英文題目
+            {"q": "2. (Need Translation) Interaction with Ggomo?", "options": {"A": "A", "B": "B", "C": "C"}},
+            {"q": "3. (Need Translation) What attracts you on stage?", "options": {"A": "A", "B": "B", "C": "C"}},
+            {"q": "4. (Need Translation) Voice characteristic?", "options": {"A": "A", "B": "B", "C": "C"}},
+            {"q": "5. (Need Translation) Favorite variety show moment?", "options": {"A": "A", "B": "B", "C": "C"}},
+            {"q": "6. (Need Translation) Fashion style?", "options": {"A": "A", "B": "B", "C": "C"}},
+            {"q": "7. (Need Translation) Last song at concert?", "options": {"A": "A", "B": "B", "C": "C"}},
+            {"q": "8. (Need Translation) Tattoo meaning?", "options": {"A": "A", "B": "B", "C": "C"}},
+            {"q": "9. (Need Translation) Role in the group?", "options": {"A": "A", "B": "B", "C": "C"}},
+            {"q": "10. (Need Translation) What do her eyes say?", "options": {"A": "A", "B": "B", "C": "C"}}
         ],
         "results": {
             "A": {"type": "Puppy Type", "desc": "In your eyes, Whee In is the definition of 'Standard Cuteness.'"},
@@ -156,7 +184,7 @@ curr_data = LANG_MAP.get(st.session_state.lang, LANG_MAP["繁體中文"])
 
 # A. 語言選擇畫面
 if st.session_state.step == -1:
-    st.markdown("### Select Language")
+    st.markdown(f"### {curr_data['select_lang']}")
     col1, col2, col3 = st.columns(3)
     if col1.button("繁體中文", use_container_width=True):
         st.session_state.lang, st.session_state.step = "繁體中文", 0
@@ -172,6 +200,8 @@ if st.session_state.step == -1:
 elif st.session_state.step < len(curr_data["questions"]):
     q_item = curr_data["questions"][st.session_state.step]
     st.write(f"**{q_item['q']}**")
+    
+    # 使用迴圈產生選項按鈕
     for text, val in q_item["options"].items():
         if st.button(text, key=f"btn_{st.session_state.step}_{val}"):
             st.session_state.answers.append(val)
@@ -184,9 +214,9 @@ else:
     top_choice = counts.most_common(1)[0][0]
     res = curr_data["results"][top_choice]
     
-    # 儲存結果到 Google Sheets (只儲存一次)
+    # 儲存結果到 Google Sheets (確保只存一次)
     if not st.session_state.recorded:
-        with st.spinner('Calculating...'):
+        with st.spinner('Recording data...'):
             save_result_to_gsheets(res['type'])
         st.session_state.recorded = True
 
