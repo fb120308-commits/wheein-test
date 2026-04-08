@@ -14,30 +14,27 @@ def get_base64_file(file_path):
         return ""
 
 # --- 2. Google Sheets 連線設定 ---
-SHEET_URL = "https://docs.google.com/spreadsheets/d/18SouKWNtcmN6jt5yOqFq6tbjSUsViBTq8i9k97BhzCc/edit?gid=0#gid=0"
+# ⚠️ 請確保這裡的網址是你自己的 Google 試算表網址
+SHEET_URL = "https://docs.google.com/spreadsheets/d/你的試算表ID/edit"
 conn = st.connection("gsheets", type=GSheetsConnection)
 
 def save_result_to_gsheets(final_type):
-    """將測驗結果存入 Google Sheets"""
+    """將測驗結果靜默存入 Google Sheets"""
     try:
-        # 讀取現有資料
         df = conn.read(spreadsheet=SHEET_URL)
         df = df.dropna(how='all')
     except:
-        # 如果是空表，建立結構
         df = pd.DataFrame(columns=["timestamp", "result"])
 
-    # 準備新紀錄 (使用台灣時間)
     new_data = pd.DataFrame({
         "timestamp": [pd.Timestamp.now(tz='Asia/Taipei').strftime("%Y-%m-%d %H:%M:%S")], 
         "result": [final_type]
     })
     
-    # 合併並寫回
     updated_df = pd.concat([df, new_data], ignore_index=True)
     conn.update(worksheet="工作表1", data=updated_df, spreadsheet=SHEET_URL)
 
-# --- 3. 測驗資料內容 ---
+# --- 3. 測驗資料內容 (繁中、韓、英) ---
 LANG_MAP = {
     "繁體中文": {
         "title": "輝人靈魂視角測驗",
@@ -45,7 +42,7 @@ LANG_MAP = {
         "restart_btn": "重新測驗",
         "questions": [
             {"q": "1. 看到輝人發了一張素顏捏臉自拍，妳的反應？", "options": {"A. 尖叫！怎麼會這麼軟萌，好想捏一把！": "A", "B. 覺得表情很逗趣，這角度只有她撐得住。": "B", "C. 眼神依然有戲，透出清冷的氣質。": "C"}},
-            {"q": "2. 輝人跟 Ggomo 的互動中，什麼畫面最深刻？", "options": {"A. 輝人跟 Ggomo 說話，牠卻不理她。": "A", "B. 兩者都散發「我行內素」的氛圍。": "B", "C. 抱著 Ggomo 時，溫柔帶點清傲的側臉。": "C"}},
+            {"q": "2. 輝人跟 Ggomo 的互動中，什麼畫面最深刻？", "options": {"A. 輝人跟 Ggomo 說話，牠卻不理她。": "A", "B. 兩者都散發「我行我素」的氛圍。": "B", "C. 抱著 Ggomo 時，溫柔帶點清傲的側臉。": "C"}},
             {"q": "3. 舞台演出中，輝人最吸引你的是？", "options": {"A. 發自內心的享受與開心的笑容。": "A", "B. 旋律即興與獨特的舞台漫步。": "B", "C. 舉手投足間流露出的魅惑感。": "C"}},
             {"q": "4. 你覺得輝人的聲音特質偏向？", "options": {"A. 像午後陽光一樣溫暖治癒。": "A", "B. 像精品咖啡，層次豐富難以捉摸。": "B", "C. 像陳年紅酒，絲滑、迷人且微醺。": "C"}},
             {"q": "5. 看輝人的花絮或綜藝時，你最喜歡她？", "options": {"A. 毫無顧忌的大笑，笑到酒窩深陷。": "A", "B. 突然冒出的四次元發言或吐槽。": "B", "C. 混亂中也能保持優雅成熟的樣子。": "C"}},
@@ -67,7 +64,7 @@ LANG_MAP = {
         "restart_btn": "다시 하기",
         "questions": [
             {"q": "1. 휘인이 민낯으로 볼을 꼬집으며 찍은 셀카를 올렸을 때 반응은?", "options": {"A. 심쿵! 어쩜 이렇게 말랑콩떡 같지?": "A", "B. 표정이 너무 익살스럽네.": "B", "C. 민낯인데도 눈빛이 깊네.": "C"}},
-            # ... (其餘韓文題目可依此類推複製，為節省篇幅在此簡略)
+            # ... (其餘題目請自行補齊)
         ],
         "results": {
             "A": {"type": "강아지파", "desc": "당신의 눈에 휘인은 '정석 귀요미' 그 자체입니다."},
@@ -81,7 +78,7 @@ LANG_MAP = {
         "restart_btn": "Restart",
         "questions": [
             {"q": "1. Whee In's bare-faced selfie pinching her cheeks, your reaction?", "options": {"A. AHH! So soft and squishy!": "A", "B. Hilarious angle.": "B", "C. Chic aura.": "C"}},
-            # ... (其餘英文題目可依此類推複製)
+            # ... (其餘題目請自行補齊)
         ],
         "results": {
             "A": {"type": "Puppy Type", "desc": "In your eyes, Whee In is the definition of 'Standard Cuteness.'"},
@@ -91,7 +88,7 @@ LANG_MAP = {
     }
 }
 
-# --- 4. CSS 樣式設定 ---
+# --- 4. CSS 樣式設定 (美化介面) ---
 img_header = get_base64_file("Header.png")
 img_middle = get_base64_file("Middle.png")
 img_footer = get_base64_file("Footer.png")
@@ -115,7 +112,7 @@ st.markdown(f"""
         margin: auto; 
         padding: 280px 20px 300px 20px !important; 
     }}
-    h1, h2, h3, h4 {{ color: #3d1b1b !important; text-align: center; }}
+    h1, h2, h3 {{ color: #3d1b1b !important; text-align: center; }}
     .stMarkdown p {{
         background-color: rgba(255, 255, 255, 0.6);
         padding: 8px 15px !important; border-radius: 10px; color: #333333 !important;
@@ -136,7 +133,7 @@ audio_base64 = get_base64_file("bgm.mp3")
 if audio_base64:
     audio_html = f"""
         <div style="position: relative; z-index: 999; top: -150px; left: -10px; height: 0px;">
-            <audio controls autoplay loop style="height: 35px; width: 230px; opacity: 0.8;">
+            <audio controls autoplay loop style="height: 35px; width: 230px; opacity: 0.8; border-radius: 20px;">
                 <source src="data:audio/mp3;base64,{audio_base64}" type="audio/mp3">
             </audio>
         </div>
@@ -181,9 +178,8 @@ else:
     top_choice = counts.most_common(1)[0][0]
     res = curr_data["results"][top_choice]
     
-    # 儲存到雲端 (只存一次)
     if not st.session_state.recorded:
-        with st.spinner('Saving your result...'):
+        with st.spinner('Calculating...'):
             save_result_to_gsheets(res['type'])
         st.session_state.recorded = True
 
@@ -195,23 +191,9 @@ else:
         </div>
     """, unsafe_allow_html=True)
     
+    st.write("")
     if st.button(curr_data["restart_btn"]):
         st.session_state.step = -1
         st.session_state.answers = []
         st.session_state.recorded = False
         st.rerun()
-
-# --- 7. 管理員後台 (隱藏在底部) ---
-st.write("---")
-with st.expander("📊 Admin Stats"):
-    pwd = st.text_input("Password", type="password")
-    if pwd == "wheein0417":
-        try:
-            stats_df = conn.read(spreadsheet=SHEET_URL)
-            if not stats_df.empty:
-                st.bar_chart(stats_df['result'].value_counts())
-                st.dataframe(stats_df)
-            else:
-                st.write("No data yet.")
-        except:
-            st.write("Connection Error.")
