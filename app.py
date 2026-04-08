@@ -233,7 +233,6 @@ else:
     
     st.markdown(f"""
         <div class='result-box'>
-
             <h1>{res['type']}</h1>
             <p>{res['desc']}</p>
         </div>
