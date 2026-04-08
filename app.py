@@ -15,7 +15,7 @@ def get_base64_file(file_path):
 
 # --- 2. Google Sheets 連線設定 ---
 # ⚠️ 請確保這裡的網址是你自己的 Google 試算表網址
-SHEET_URL = "https://docs.google.com/spreadsheets/d/你的試算表ID/edit"
+SHEET_URL = "https://www.googleapis.com/robot/v1/metadata/x509/wheein-quiz%40zinc-prism-492712-u4.iam.gserviceaccount.com"
 conn = st.connection("gsheets", type=GSheetsConnection)
 
 def save_result_to_gsheets(final_type):
