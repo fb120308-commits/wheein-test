@@ -87,9 +87,9 @@ bg_css = f'url("data:image/png;base64,{img_data}")' if img_data else "none"
 st.markdown(f"""
    <style>
     /* 【關鍵修正 1】徹底隱藏 Streamlit 預設的頂部選單，不讓它擋住標題！ */
-    header { visibility: hidden !important; height: 0px !important; }
+    header {{ visibility: hidden !important; height: 0px !important; }}
     
-    .stApp { background-color: #9d2933; }
+    .stApp {{ background-color: #9d2933; }}
     
     .block-container {{
         background-image: {bg_css};
