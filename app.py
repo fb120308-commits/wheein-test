@@ -88,7 +88,7 @@ st.markdown(f"""
     <style>
     .stApp {{ background-color: #9d2933; }}
 
-.block-container {
+.block-container {{
         background-image: {bg_css};
         /* 【關鍵修正 1】改用 cover，保證圖片 100% 不變形！ */
         background-size: cover !important; 
@@ -103,7 +103,7 @@ st.markdown(f"""
         /* 微調留白，讓選項按鈕乖乖待在筆記本內 */
         padding: 270px 30px 50px 30px !important; 
         border-radius: 0px; 
-    } 
+    }} 
     
     /* 這裡只針對文字加底色，沒有幽靈透明框了 */
     .stMarkdown {{
