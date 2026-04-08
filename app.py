@@ -150,7 +150,7 @@ st.markdown(f"""
     
     /* ★ 調整標題間距：把標題下面的空白縮小 ★ */
     .result-box h1 {{ 
-        font-size: 1em; 
+        font-size: 1.3em; 
         margin-top: 0px !important;
         margin-bottom: 5px !important; 
     }}
@@ -158,7 +158,7 @@ st.markdown(f"""
     /* ★ 調整內文間距：把段落上面的空白拔掉 ★ */
     .result-box p {{ 
         font-size: 0.95em; 
-        line-height: 1.6; 
+        line-height: 1; 
         margin-top: 0px !important; 
     }}
     </style>
