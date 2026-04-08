@@ -91,7 +91,7 @@ st.markdown(f"""
     
     .stApp {{ background-color: #9d2933; }}
     
-    .block-container {{
+  .block-container {{
         background-image: {bg_css};
         background-size: 100% auto !important; 
         background-position: top center !important; 
@@ -99,10 +99,12 @@ st.markdown(f"""
         max-width: 420px !important; 
         min-height: 100vh !important;
         margin: auto; 
-        padding: 240px 20px 20px 20px !important; 
+        /* 【關鍵修改 1】240px 改成 180px，讓整體內容往上升，避開底部 */
+        padding: 180px 20px 20px 20px !important; 
     }}
     
-    .stMarkdown {{
+    /* 【關鍵修改 2】加上 p，只針對有文字的段落加底色，徹底消滅幽靈空框！ */
+    .stMarkdown p {{
         background-color: rgba(255, 255, 255, 0.5);
         padding: 5px 15px !important; 
         border-radius: 10px; 
