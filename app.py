@@ -87,17 +87,23 @@ bg_css = f'url("data:image/png;base64,{img_data}")' if img_data else "none"
 st.markdown(f"""
     <style>
     .stApp {{ background-color: #9d2933; }}
-    
-.block-container {{
+
+.block-container {
         background-image: {bg_css};
-        background-size: 100% 100%; /* 關鍵修改：強制圖片拉伸填滿整個高度 */
+        /* 【關鍵修正 1】改用 cover，保證圖片 100% 不變形！ */
+        background-size: cover !important; 
+        /* 【關鍵修正 2】鎖定上方置中，死守標題與輝人照片的位置 */
+        background-position: center top !important; 
         background-repeat: no-repeat;
+        
         max-width: 420px !important; 
-        min-height: 85vh !important; /* 讓高度根據手機螢幕自動適應 */
+        min-height: 100vh !important; /* 讓容器自然延伸到螢幕底部 */
+        
         margin: auto; 
-        padding: 260px 30px 50px 30px !important; /* 縮小留白，適應所有手機 */
-        border-radius: 20px; 
-    }}
+        /* 微調留白，讓選項按鈕乖乖待在筆記本內 */
+        padding: 270px 30px 50px 30px !important; 
+        border-radius: 0px; 
+    } 
     
     /* 這裡只針對文字加底色，沒有幽靈透明框了 */
     .stMarkdown {{
