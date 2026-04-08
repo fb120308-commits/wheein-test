@@ -186,7 +186,6 @@ else:
     st.balloons()
     st.markdown(f"""
         <div class='result-box'>
-            <h2>Result</h2>
             <h1>{res['type']}</h1>
             <p>{res['desc']}</p>
         </div>
