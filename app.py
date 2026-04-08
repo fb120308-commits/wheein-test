@@ -2,12 +2,14 @@ import streamlit as st
 import base64
 from collections import Counter
 
-# --- 1. 圖片處理函數 ---
-def get_base64_image(file_path):
+# --- 1. 檔案處理函數 (整合圖片與音檔) ---
+@st.cache_data
+def get_base64_file(file_path):
     try:
         with open(file_path, "rb") as f:
             return base64.b64encode(f.read()).decode()
-    except: 
+    except Exception as e:
+        print(f"找不到檔案或發生錯誤: {file_path} - {e}")
         return None
 
 # --- 2. 測驗資料內容 ---
@@ -81,9 +83,9 @@ LANG_MAP = {
 }
 
 # --- 3. CSS 樣式設定 (終極純淨版) ---
-img_header = get_base64_image("Header.png")
-img_middle = get_base64_image("Middle.png")
-img_footer = get_base64_image("Footer.png")
+img_header = get_base64_file("Header.png")
+img_middle = get_base64_file("Middle.png")
+img_footer = get_base64_file("Footer.png")
 
 bg_header = f'url("data:image/png;base64,{img_header}")' if img_header else "none"
 bg_middle = f'url("data:image/png;base64,{img_middle}")' if img_middle else "none"
@@ -107,7 +109,6 @@ st.markdown(f"""
         max-width: 420px !important; 
         min-height: 100vh !important;
         margin: auto; 
-        /* 沒了進度條，上方留白改回 280px，下方依舊 300px 保護貓咪 */
         padding: 280px 20px 300px 20px !important; 
     }}
     
@@ -139,6 +140,18 @@ st.markdown(f"""
     </style>
     """, unsafe_allow_html=True)
 
+# --- 3.5 背景音樂 (BGM) ---
+audio_base64 = get_base64_file("bgm.mp3")
+if audio_base64:
+    audio_html = f"""
+        <div style="text-align: center; margin-bottom: 15px;">
+            <audio controls autoplay loop style="height: 35px; width: 250px; opacity: 0.8;">
+                <source src="data:audio/mp3;base64,{audio_base64}" type="audio/mp3">
+            </audio>
+        </div>
+    """
+    st.markdown(audio_html, unsafe_allow_html=True)
+
 # --- 4. 流程控制 ---
 if 'step' not in st.session_state: st.session_state.step = -1
 if 'answers' not in st.session_state: st.session_state.answers = []
@@ -163,12 +176,11 @@ if st.session_state.step == -1:
         st.session_state.step = 0
         st.rerun()
 
-# B. 題目進行畫面 (進度條已刪除)
+# B. 題目進行畫面
 elif st.session_state.step < len(curr_data["questions"]):
     q_idx = st.session_state.step
     q_item = curr_data["questions"][q_idx]
     
-    # 直接印出題目，沒有進度條了
     st.write(f"**{q_item['q']}**")
     
     for text, val in q_item["options"].items():
