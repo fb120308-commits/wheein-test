@@ -69,4 +69,123 @@ LANG_MAP = {
             {"q": "6. Which fashion style does she pull off best?", "options": {"A. Oversized boyish hoodies and caps.": "A", "B. Bright colors and street-graffiti look.": "B", "C. Slim-fit blazers with mystery.": "C"}},
             {"q": "7. One song request at the end of a concert?", "options": {"A. 〈Wheee〉": "A", "B. 〈EASY〉 (ft. Sik-K)": "B", "C. 〈Shhh〉": "C"}},
             {"q": "8. What do you think her tattoos represent?", "options": {"A. Pure love for life and longing for freedom.": "A", "B. Unique artist soul and quirky aesthetics.": "B", "C. Maturity and mystery, a woman with a story.": "C"}},
-            {"q": "9. Her role within MAMAMOO's group performances?", "options":
+            {"q": "9. Her role within MAMAMOO's group performances?", "options": {"A. The Sweetheart bridging emotions.": "A", "B. The Maverick bringing surprises.": "B", "C. The Soul adding jazz and sexy aura.": "C"}},
+            {"q": "10. What message do her eyes usually send?", "options": {"A. 'Let's play!'": "A", "B. 'What are you thinking?'": "B", "C. 'Look at me.'": "C"}}
+        ],
+        "results": {
+            "A": {"type": "🐶 Puppy Type", "desc": "In your eyes, Whee In is the definition of 'Standard Cuteness.' You're easily defeated by her smile and dimples."},
+            "B": {"type": "🐱 Cat Type", "desc": "You admire her artistic temperament and 'one-of-a-kind' soul. To you, she's like a proud yet curious cat."},
+            "C": {"type": "🦊 Fox Type", "desc": "You're completely immersed in her stage presence and mature allure. In your eyes, she is the incarnation of elegance."}
+        }
+    }
+}
+
+# --- 3. CSS 樣式設定 ---
+img_data = get_base64_image("Whee In The Test.png")
+bg_css = f'url("data:image/png;base64,{img_data}")' if img_data else "none"
+
+st.markdown(f"""
+    <style>
+    /* 隱藏頂部選單 */
+    header {{ visibility: hidden !important; height: 0px !important; }}
+    
+    .stApp {{ background-color: #9d2933; }}
+    
+    .block-container {{
+        background-image: {bg_css};
+        background-size: 100% auto !important; 
+        background-position: top center !important; 
+        background-repeat: no-repeat !important;
+        max-width: 420px !important; 
+        min-height: 100vh !important;
+        margin: auto; 
+        padding: 240px 20px 20px 20px !important; 
+    }}
+    
+    .stMarkdown {{
+        background-color: rgba(255, 255, 255, 0.5);
+        padding: 5px 15px !important; 
+        border-radius: 10px; 
+        margin-bottom: 5px !important; 
+    }}
+    
+    .stButton > button {{ 
+        width: 100%; 
+        border-radius: 12px; 
+        background: rgba(255, 255, 255, 0.95); 
+        color: #b71c1c; 
+        font-weight: bold; 
+        border: 1.5px solid #b71c1c;
+        padding: 6px 10px !important; 
+        margin-bottom: -5px !important; 
+        font-size: 0.9em !important; 
+    }}
+    
+    .result-box {{ 
+        background: rgba(255,255,255,0.9); padding: 20px; 
+        border-radius: 20px; text-align: center; color: black; border: 2px solid #b71c1c;
+    }}
+    .result-box h1 {{ font-size: 1.8em; margin-bottom: 10px; }}
+    .result-box p {{ font-size: 0.95em; line-height: 1.6; }}
+    </style>
+    """, unsafe_allow_html=True)
+
+# --- 4. 流程控制 ---
+if 'step' not in st.session_state: st.session_state.step = -1
+if 'answers' not in st.session_state: st.session_state.answers = []
+if 'lang' not in st.session_state: st.session_state.lang = "繁體中文"
+
+curr_data = LANG_MAP.get(st.session_state.lang, LANG_MAP["繁體中文"])
+
+# A. 語言選擇畫面
+if st.session_state.step == -1:
+    st.markdown("<h3 style='text-align:center;'>Select Language</h3>", unsafe_allow_html=True)
+    col1, col2, col3 = st.columns(3)
+    if col1.button("繁體中文", use_container_width=True):
+        st.session_state.lang = "繁體中文"
+        st.session_state.step = 0
+        st.rerun()
+    if col2.button("한국어", use_container_width=True):
+        st.session_state.lang = "한국어"
+        st.session_state.step = 0
+        st.rerun()
+    if col3.button("English", use_container_width=True):
+        st.session_state.lang = "English"
+        st.session_state.step = 0
+        st.rerun()
+
+# B. 題目進行畫面
+elif st.session_state.step < len(curr_data["questions"]):
+    q_idx = st.session_state.step
+    q_item = curr_data["questions"][q_idx]
+    st.progress((q_idx + 1) / len(curr_data["questions"]))
+    st.write(f"**{q_item['q']}**")
+    for text, val in q_item["options"].items():
+        if st.button(text, key=f"q_{q_idx}_{val}"):
+            st.session_state.answers.append(val)
+            st.session_state.step += 1
+            st.rerun()
+
+# C. 結果顯示畫面
+else:
+    counts = Counter(st.session_state.answers)
+    top_choice = counts.most_common(1)[0][0]
+    res = curr_data["results"][top_choice]
+    
+    st.balloons()
+    st.markdown(f"""
+        <div class='result-box'>
+            <h2>Result</h2>
+            <h1>{res['type']}</h1>
+            <p>{res['desc']}</p>
+        </div>
+    """, unsafe_allow_html=True)
+    
+    st.write("") 
+    
+    col1, col2, col3 = st.columns([1, 1.5, 1])
+    with col2:
+        if st.button(curr_data["restart_btn"], use_container_width=True):
+            st.session_state.step = -1
+            st.session_state.answers = []
+            st.rerun()
