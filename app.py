@@ -143,7 +143,7 @@ st.markdown(f"""
 # --- 3.5 背景音樂 (BGM) 不佔空間相對浮動版本 ---
 audio_base64 = get_base64_file("bgm.mp3")
 if audio_base64:
-    # 1. height: 0px; 讓播放器不佔據畫面空間，絕對不會把下面的字往下擠
+    # 1. height: -3px; 讓播放器不佔據畫面空間，絕對不會把下面的字往下擠
     # 2. margin-top: -80px; 讓播放器從原本文字的位置「往上浮」到藍色框框的位置
     # (如果覺得太高或太低，可以微調 -60px 這個數字，例如改成 -50px 或 -70px)
     audio_html = f"""
