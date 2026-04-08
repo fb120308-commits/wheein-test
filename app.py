@@ -157,8 +157,8 @@ st.markdown(f"""
     
     /* ★ 調整內文間距：把段落上面的空白拔掉 ★ */
     .result-box p {{ 
-        font-size: 0.95em; 
-        line-height: 1; 
+        font-size: 0.8em; 
+        line-height: 1.3; 
         margin-top: 0px !important; 
     }}
     </style>
