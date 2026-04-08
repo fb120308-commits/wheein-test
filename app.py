@@ -104,12 +104,16 @@ st.markdown(f"""
         background-size: min(100%, 420px) auto, min(100%, 420px) auto, min(100%, 420px) auto !important; 
     }}
     
-    .block-container {{
-        background: transparent !important; 
+.block-container {{
+        background-image: {bg_css};
+        background-size: 100% auto !important; 
+        background-position: top center !important; 
+        background-repeat: no-repeat !important;
         max-width: 420px !important; 
         min-height: 100vh !important;
         margin: auto; 
-        padding: 280px 20px 300px 20px !important; 
+        /* 【關鍵修改 1】180px 改成 220px，讓整體內容下移，避開上方照片 */
+        padding: 220px 20px 20px 20px !important; 
     }}
     
     .stMarkdown p {{
@@ -117,8 +121,10 @@ st.markdown(f"""
         padding: 5px 15px !important; 
         border-radius: 10px; 
         margin-bottom: 5px !important; 
-        color: black !important;
     }}
+
+    /* 【關鍵修改 2】最強力的一行！強制移除結果描述文字內部的多餘底色，讓它回歸純淨 */
+    .result-box .stMarkdown p {{ background-color: transparent !important; padding: 0 !important; }}
     
     .stButton > button {{ 
         width: 100%; 
