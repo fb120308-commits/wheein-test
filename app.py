@@ -82,7 +82,7 @@ LANG_MAP = {
     }
 }
 
-# --- 3. CSS 樣式設定 (深色模式文字防護版) ---
+# --- 3. CSS 樣式設定 (深色模式文字防護版 + 結果排版優化) ---
 img_header = get_base64_file("Header.png")
 img_middle = get_base64_file("Middle.png")
 img_footer = get_base64_file("Footer.png")
@@ -138,12 +138,29 @@ st.markdown(f"""
         font-size: 0.9em !important; 
     }}
     
+    /* === 結果顯示區塊 === */
     .result-box {{ 
-        background: rgba(255,255,255,0.9); padding: 20px; 
-        border-radius: 20px; text-align: center; color: black; border: 2px solid #b71c1c;
+        background: rgba(255,255,255,0.9); 
+        padding: 20px; 
+        border-radius: 20px; 
+        text-align: center; 
+        color: black; 
+        border: 2px solid #b71c1c;
     }}
-    .result-box h1 {{ font-size: 1.8em; margin-bottom: 10px; }}
-    .result-box p {{ font-size: 0.95em; line-height: 1.6; }}
+    
+    /* ★ 調整標題間距：把標題下面的空白縮小 ★ */
+    .result-box h1 {{ 
+        font-size: 1.8em; 
+        margin-top: 0px !important;
+        margin-bottom: 5px !important; 
+    }}
+    
+    /* ★ 調整內文間距：把段落上面的空白拔掉 ★ */
+    .result-box p {{ 
+        font-size: 0.95em; 
+        line-height: 1.6; 
+        margin-top: 0px !important; 
+    }}
     </style>
     """, unsafe_allow_html=True)
 
