@@ -85,25 +85,26 @@ img_data = get_base64_image("Whee In The Test.png")
 bg_css = f'url("data:image/png;base64,{img_data}")' if img_data else "none"
 
 st.markdown(f"""
-    <style>
-    .stApp {{ background-color: #9d2933; }}
-
-.block-container {{
+   <style>
+    /* 【關鍵修正 1】徹底隱藏 Streamlit 預設的頂部選單，不讓它擋住標題！ */
+    header { visibility: hidden !important; height: 0px !important; }
+    
+    .stApp { background-color: #9d2933; }
+    
+    .block-container {{
         background-image: {bg_css};
-        /* 【關鍵修正 1】改用 cover，保證圖片 100% 不變形！ */
-        background-size: cover !important; 
-        /* 【關鍵修正 2】鎖定上方置中，死守標題與輝人照片的位置 */
-        background-position: center top !important; 
-        background-repeat: no-repeat;
+        /* 【關鍵修正 2】寬度 100% 貼齊螢幕，高度按原圖比例縮放，保證不變形不裁切！ */
+        background-size: 100% auto !important; 
+        background-position: top center !important; 
+        background-repeat: no-repeat !important;
         
         max-width: 420px !important; 
-        min-height: 100vh !important; /* 讓容器自然延伸到螢幕底部 */
+        min-height: 100vh !important;
         
         margin: auto; 
-        /* 微調留白，讓選項按鈕乖乖待在筆記本內 */
-        padding: 270px 30px 50px 30px !important; 
-        border-radius: 0px; 
-    }} 
+        /* 稍微把左右 padding 縮小，讓手機版按鈕不會太擠 */
+        padding: 260px 20px 50px 20px !important; 
+    }}
     
     /* 這裡只針對文字加底色，沒有幽靈透明框了 */
     .stMarkdown {{
