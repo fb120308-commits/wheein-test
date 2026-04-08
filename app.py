@@ -80,44 +80,43 @@ LANG_MAP = {
         "title": "【휘인 소울 시각 테스트】",
         "select_lang": "언어를 선택하세요",
         "restart_btn": "다시 하기",
-        "questions": [
-            {"q": "1. 휘인이 민낯으로 볼을 꼬집으며 찍은 셀카를 올렸을 때 반응은?", "options": {"A. 심쿵! 어쩜 이렇게 말랑콩떡 같지?": "A", "B. 표정이 너무 익살스럽네.": "B", "C. 민낯인데도 눈빛이 깊네.": "C"}},
-            {"q": "2. (번역 필요) 휘인과 꼬모의 상호작용 중 가장 기억에 남는 장면은?", "options": {"A": "A", "B": "B", "C": "C"}},
-            {"q": "3. (번역 필요) 무대 위에서 휘인의 어떤 모습에 가장 끌리나요?", "options": {"A": "A", "B": "B", "C": "C"}},
-            {"q": "4. (번역 필요) 휘인의 목소리 특징은 어디에 가깝다고 생각하나요?", "options": {"A": "A", "B": "B", "C": "C"}},
-            {"q": "5. (번역 필요) 비하인드 영상에서 그녀의 어떤 모습을 좋아하나요?", "options": {"A": "A", "B": "B", "C": "C"}},
-            {"q": "6. (번역 필요) 그녀에게 가장 잘 어울리는 패션 스타일은?", "options": {"A": "A", "B": "B", "C": "C"}},
-            {"q": "7. (번역 필요) 콘서트 마지막 곡으로 무엇을 듣고 싶나요?", "options": {"A": "A", "B": "B", "C": "C"}},
-            {"q": "8. (번역 필요) 그녀의 타투가 상징하는 것은 무엇일까요?", "options": {"A": "A", "B": "B", "C": "C"}},
-            {"q": "9. (번역 필요) 그룹 내에서 휘인의 역할은 무엇이라고 생각하나요?", "options": {"A": "A", "B": "B", "C": "C"}},
-            {"q": "10. (번역 필요) 그녀의 눈빛이 가장 자주 말하는 것은?", "options": {"A": "A", "B": "B", "C": "C"}}
+{"q": "1. 휘인이 민낯으로 볼을 꼬집으며 찍은 셀카를 올렸을 때 반응은?", "options": {"A. 심쿵! 어쩜 이렇게 말랑콩떡 같지?": "A", "B. 표정이 너무 익살스럽네. 이런 각도는 휘인뿐.": "B", "C. 민낯인데도 눈빛이 깊네. 차갑고 몽환적이야.": "C"}},
+            {"q": "2. 휘인과 꼬모(Ggomo)의 케미 중 가장 인상 깊은 장면은?", "options": {"A. 휘인이 말을 거는데 꼬모가 가볍게 무시하는 장면.": "A", "B. 둘 다 '마이웨이' 기질이 있어 닮아 보이는 분위기.": "B", "C. 꼬모를 안고 있을 때 비치는 다정하고 도도한 옆모습.": "C"}},
+            {"q": "3. 무대 위에서 당신을 가장 사로잡는 휘인의 모습은?", "options": {"A. 무대 자체를 진심으로 즐기며 짓는 행복한 미소.": "A", "B. 예상치 못한 애드리브와 독보적인 스웨그.": "B", "C. 매혹적인 분위기와 무대를 압도하는 자신감.": "C"}},
+            {"q": "4. 당신이 생각하는 휘인의 목소리 특징은?", "options": {"A. 오후의 햇살처럼 따스하고 치유해 주는 힘.": "A", "B. 스페셜티 커피처럼 층이 다양하고 오묘한 느낌.": "B", "C. 잘 숙성된 와인처럼 부드럽고 취하게 만드는 마력.": "C"}},
+            {"q": "5. 예능에서 당신이 가장 좋아하는 휘인의 모습은?", "options": {"A. 보조개가 쏙 들어갈 정도로 호탕하게 웃는 모습.": "A", "B. 갑자기 튀어나오는 4차원적인 멘트나 엉뚱한 팩폭.": "B", "C. 혼란 속에서도 우아함을 유지하는 성숙한 모습.": "C"}},
+            {"q": "6. 휘인의 패션 스타일 중 가장 잘 어울리는 것은?", "options": {"A. 오버사이즈 보이시 룩에 비니를 매치한 스타일.": "A", "B. 화려한 색감이나 독특한 스트릿 그래피티 룩.": "B", "C. 슬림한 핏의 셋업 수트로 완성한 신비로운 스타일.": "C"}},
+            {"q": "7. 콘서트 앵콜곡으로 딱 한 곡만 고를 수 있다면?", "options": {"A. 〈Wheee〉": "A", "B. 〈EASY〉 (ft. Sik-K)": "B", "C. 〈Shhh〉": "C"}},
+            {"q": "8. 휘인의 타투가 상징하는 것은 무엇이라고 생각하나요?", "options": {"A. 삶에 대한 순수한 애정과 자유를 향한 갈망.": "A", "B. 남다른 예술가적 영혼과 독특한 미학.": "B", "C. 성숙하고 신비로운, 서사가 담긴 여인의 향기.": "C"}},
+            {"q": "9. 마마무 팀 내에서 휘인의 역할은 무엇인가요?", "options": {"A. 멤버들의 감정을 이어주는 따뜻한 힐링 아이콘.": "A", "B. 무대를 더 흥미롭게 만드는 영리한 천재 아티스트.": "B", "C. 소울풀한 감성과 섹시한 아우라를 더하는 핵심.": "C"}},
+            {"q": "10. 휘인의 눈빛이 가장 자주 보내는 신호는?", "options": {"A. '우리 같이 놀자!'": "A", "B. '무슨 생각 해?'": "B", "C. '나만 바라봐.'": "C"}}
         ],
         "results": {
-            "A": {"type": "강아지파", "desc": "당신의 눈에 휘인은 '정석 귀요미' 그 자체입니다."},
-            "B": {"type": "고양이파", "desc": "당신은 휘인의 예술가적 기질을 가장 아낍니다."},
-            "C": {"type": "여우파", "desc": "당신은 휘인의 무대 위 아우라에 완전히 빠져 있습니다."}
+            "A": {"type": " 강아지파", "desc": "당신의 눈에 휘인은 '정석 귀요미' 그 자체입니다. 그녀의 미소와 보조개에 가장 쉽게 매료됩니다. 당신에게 휘인은 따뜻하고 에너지 넘치는 소녀로, 그녀가 웃으면 세상이 환해진다고 느낍니다."},
+            "B": {"type": " 고양이파", "desc": "당신은 휘인의 예술가적 기질을 가장 아낍니다. 당신 눈에 그녀는 고고하면서도 호기심 많은 고양이 같습니다. 독특한 취향을 가진 그녀의 신비로움과 무심함조차 가장 큰 매력이라고 생각합니다."},
+            "C": {"type": " 여우파", "desc": "당신은 휘인의 무대 위 아우라와 성숙한 분위기에 완전히 빠져 있습니다. 그녀는 우아함과 섹시함의 결정체입니다. 눈빛 하나에도 치명적인 유혹이 서려 있으며, 깊이를 알 수 없는 신비로운 존재입니다."}
         }
     },
     "English": {
         "title": "Whee In Soul Quiz",
         "select_lang": "Select Language",
         "restart_btn": "Restart",
-        "questions": [
-            {"q": "1. Whee In's bare-faced selfie pinching her cheeks, your reaction?", "options": {"A. AHH! So soft and squishy!": "A", "B. Hilarious angle.": "B", "C. Chic aura.": "C"}},
-            {"q": "2. (Need Translation) Interaction with Ggomo?", "options": {"A": "A", "B": "B", "C": "C"}},
-            {"q": "3. (Need Translation) What attracts you on stage?", "options": {"A": "A", "B": "B", "C": "C"}},
-            {"q": "4. (Need Translation) Voice characteristic?", "options": {"A": "A", "B": "B", "C": "C"}},
-            {"q": "5. (Need Translation) Favorite variety show moment?", "options": {"A": "A", "B": "B", "C": "C"}},
-            {"q": "6. (Need Translation) Fashion style?", "options": {"A": "A", "B": "B", "C": "C"}},
-            {"q": "7. (Need Translation) Last song at concert?", "options": {"A": "A", "B": "B", "C": "C"}},
-            {"q": "8. (Need Translation) Tattoo meaning?", "options": {"A": "A", "B": "B", "C": "C"}},
-            {"q": "9. (Need Translation) Role in the group?", "options": {"A": "A", "B": "B", "C": "C"}},
-            {"q": "10. (Need Translation) What do her eyes say?", "options": {"A": "A", "B": "B", "C": "C"}}
+ "questions": [
+            {"q": "1. Whee In's bare-faced selfie pinching her cheeks, your reaction?", "options": {"A. AHH! So soft and squishy!": "A", "B. Hilarious; only she pulls off that angle.": "B", "C. Chic aura, her eyes tell a story.": "C"}},
+            {"q": "2. Moment with Ggomo that impressed you most?", "options": {"A. Whee In talking while Ggomo ignores her.": "A", "B. Both giving off a 'doing my own thing' vibe.": "B", "C. Tender yet elegant pride when holding him.": "C"}},
+            {"q": "3. What attracts you most during her stage performances?", "options": {"A. Genuine enjoyment and heartfelt smile.": "A", "B. Unique stage swagger and ad-libs.": "B", "C. 'Stage-master' confidence and allure.": "C"}},
+            {"q": "4. How would you describe her voice quality?", "options": {"A. Afternoon sunshine—warm and healing.": "A", "B. Specialty coffee—complex and layered.": "B", "C. Aged red wine—silky and intoxicating.": "C"}},
+            {"q": "5. What do you love most in her variety show footage?", "options": {"A. Uninhibited laughter with deep dimples.": "A", "B. Sudden quirky '4D' comments or roasts.": "B", "C. Staying elegant amidst the chaos.": "C"}},
+            {"q": "6. Which fashion style does she pull off best?", "options": {"A. Oversized boyish hoodies and caps.": "A", "B. Bright colors and street-graffiti look.": "B", "C. Slim-fit blazers with mystery.": "C"}},
+            {"q": "7. One song request at the end of a concert?", "options": {"A. 〈Wheee〉": "A", "B. 〈EASY〉 (ft. Sik-K)": "B", "C. 〈Shhh〉": "C"}},
+            {"q": "8. What do you think her tattoos represent?", "options": {"A. Pure love for life and longing for freedom.": "A", "B. Unique artist soul and quirky aesthetics.": "B", "C. Maturity and mystery, a woman with a story.": "C"}},
+            {"q": "9. Her role within MAMAMOO's group performances?", "options": {"A. The Sweetheart bridging emotions.": "A", "B. The Maverick bringing surprises.": "B", "C. The Soul adding jazz and sexy aura.": "C"}},
+            {"q": "10. What message do her eyes usually send?", "options": {"A. 'Let's play!'": "A", "B. 'What are you thinking?'": "B", "C. 'Look at me.'": "C"}}
         ],
         "results": {
-            "A": {"type": "Puppy Type", "desc": "In your eyes, Whee In is the definition of 'Standard Cuteness.'"},
-            "B": {"type": "Cat Type", "desc": "You admire her artistic temperament and 'one-of-a-kind' soul."},
-            "C": {"type": "Fox Type", "desc": "You're completely immersed in her stage presence and mature allure."}
+            "A": {"type": " Puppy Type", "desc": "In your eyes, Whee In is the definition of 'Standard Cuteness.' You're easily defeated by her smile and dimples."},
+            "B": {"type": " Cat Type", "desc": "You admire her artistic temperament and 'one-of-a-kind' soul. To you, she's like a proud yet curious cat."},
+            "C": {"type": " Fox Type", "desc": "You're completely immersed in her stage presence and mature allure. In your eyes, she is the incarnation of elegance."}
         }
     }
 }
