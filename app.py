@@ -29,9 +29,9 @@ LANG_MAP = {
             {"q": "10. 你覺得輝人的眼睛最常透露？", "options": {"A. 「我們來玩吧！」": "A", "B. 「你在想什麼？」": "B", "C. 「看著我。」": "C"}}
         ],
         "results": {
-            "A": {"type": "🐶 狗派：可愛元氣", "desc": "在你眼裡，輝人就是那個「定式可愛」的代表。你最容易被她的笑容、酒窩和親和力擊倒。對你來說，她是一個溫暖、真誠的元氣少女，只要她笑，世界就亮了。"},
-            "B": {"type": "🐱 貓派：古靈精怪", "desc": "你最欣賞輝人的藝術家氣質。在她身上你看到高傲卻好奇的靈魂。你著迷於她的神祕與冷靜，即使她「營業不積極」，你也覺得這才是她最迷人的地方。"},
-            "C": {"type": "🦊 狐狸派：極致性感", "desc": "你完全沉溺於輝人的舞台魅力與成熟風情。在你眼裡，她是優雅與性感的化身，眼神與撥髮動作都散發致命誘惑力。她是個讓人想不斷接近的神祕存在。"}
+            "A": {"type": " 狗派：可愛元氣", "desc": "在你眼裡，輝人就是那個「定式可愛」的代表。你最容易被她的笑容、酒窩和親和力擊倒。對你來說，她是一個溫暖、真誠的元氣少女，只要她笑，世界就亮了。"},
+            "B": {"type": " 貓派：古靈精怪", "desc": "你最欣賞輝人的藝術家氣質。在她身上你看到高傲卻好奇的靈魂。你著迷於她的神祕與冷靜，即使她「營業不積極」，你也覺得這才是她最迷人的地方。"},
+            "C": {"type": " 狐狸派：極致性感", "desc": "你完全沉溺於輝人的舞台魅力與成熟風情。在你眼裡，她是優雅與性感的化身，眼神與撥髮動作都散發致命誘惑力。她是個讓人想不斷接近的神祕存在。"}
         }
     },
     "한국어": {
@@ -51,9 +51,9 @@ LANG_MAP = {
             {"q": "10. 휘인의 눈빛이 가장 자주 보내는 신호는?", "options": {"A. '우리 같이 놀자!'": "A", "B. '무슨 생각 해?'": "B", "C. '나만 바라봐.'": "C"}}
         ],
         "results": {
-            "A": {"type": "🐶 강아지파", "desc": "당신의 눈에 휘인은 '정석 귀요미' 그 자체입니다. 그녀의 미소와 보조개에 가장 쉽게 매료됩니다. 당신에게 휘인은 따뜻하고 에너지 넘치는 소녀로, 그녀가 웃으면 세상이 환해진다고 느낍니다."},
-            "B": {"type": "🐱 고양이파", "desc": "당신은 휘인의 예술가적 기질을 가장 아낍니다. 당신 눈에 그녀는 고고하면서도 호기심 많은 고양이 같습니다. 독특한 취향을 가진 그녀의 신비로움과 무심함조차 가장 큰 매력이라고 생각합니다."},
-            "C": {"type": "🦊 여우파", "desc": "당신은 휘인의 무대 위 아우라와 성숙한 분위기에 완전히 빠져 있습니다. 그녀는 우아함과 섹시함의 결정체입니다. 눈빛 하나에도 치명적인 유혹이 서려 있으며, 깊이를 알 수 없는 신비로운 존재입니다."}
+            "A": {"type": " 강아지파", "desc": "당신의 눈에 휘인은 '정석 귀요미' 그 자체입니다. 그녀의 미소와 보조개에 가장 쉽게 매료됩니다. 당신에게 휘인은 따뜻하고 에너지 넘치는 소녀로, 그녀가 웃으면 세상이 환해진다고 느낍니다."},
+            "B": {"type": " 고양이파", "desc": "당신은 휘인의 예술가적 기질을 가장 아낍니다. 당신 눈에 그녀는 고고하면서도 호기심 많은 고양이 같습니다. 독특한 취향을 가진 그녀의 신비로움과 무심함조차 가장 큰 매력이라고 생각합니다."},
+            "C": {"type": " 여우파", "desc": "당신은 휘인의 무대 위 아우라와 성숙한 분위기에 완전히 빠져 있습니다. 그녀는 우아함과 섹시함의 결정체입니다. 눈빛 하나에도 치명적인 유혹이 서려 있으며, 깊이를 알 수 없는 신비로운 존재입니다."}
         }
     },
     "English": {
@@ -73,9 +73,9 @@ LANG_MAP = {
             {"q": "10. What message do her eyes usually send?", "options": {"A. 'Let's play!'": "A", "B. 'What are you thinking?'": "B", "C. 'Look at me.'": "C"}}
         ],
         "results": {
-            "A": {"type": "🐶 Puppy Type", "desc": "In your eyes, Whee In is the definition of 'Standard Cuteness.' You're easily defeated by her smile and dimples."},
-            "B": {"type": "🐱 Cat Type", "desc": "You admire her artistic temperament and 'one-of-a-kind' soul. To you, she's like a proud yet curious cat."},
-            "C": {"type": "🦊 Fox Type", "desc": "You're completely immersed in her stage presence and mature allure. In your eyes, she is the incarnation of elegance."}
+            "A": {"type": " Puppy Type", "desc": "In your eyes, Whee In is the definition of 'Standard Cuteness.' You're easily defeated by her smile and dimples."},
+            "B": {"type": " Cat Type", "desc": "You admire her artistic temperament and 'one-of-a-kind' soul. To you, she's like a proud yet curious cat."},
+            "C": {"type": " Fox Type", "desc": "You're completely immersed in her stage presence and mature allure. In your eyes, she is the incarnation of elegance."}
         }
     }
 }
