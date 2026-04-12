@@ -41,7 +41,6 @@ def save_result_to_gsheets(final_type):
 LANG_MAP = {
     "繁體中文": {
         "title": "輝人靈魂視角測驗",
-        "select_lang": "請選擇語言 / Select Language",
         "restart_btn": "重新測驗",
         "questions": [
             {"q": "1. 看到輝人發了一張自拍，你的反應是？", "options": {"A. 尖叫！怎麼那麼可愛！好想捏": "A", "B. 果然是丁輝人，這個角度只有她撐得住": "B", "C. 眼神好深邃，好有氣質": "C"}},
