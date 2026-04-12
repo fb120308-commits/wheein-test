@@ -38,7 +38,7 @@ def save_result_to_gsheets(final_type):
     except Exception as e:
         pass
 
-# --- 3. 測驗資料內容 (中、韓、英完全同步) ---
+# --- 3. 測驗資料內容 (加入 images 欄位) ---
 LANG_MAP = {
     "繁體中文": {
         "title": "輝人靈魂視角測驗",
@@ -46,7 +46,11 @@ LANG_MAP = {
         "restart_btn": "重新測驗",
         "questions": [
             {"q": "1. 看到輝人發了一張自拍，你的反應是？", "options": {"A. 尖叫！怎麼那麼可愛！好想捏": "A", "B. 果然是丁輝人，這個角度只有她撐得住": "B", "C. 眼神好深邃，好有氣質": "C"}},
-            {"q": "2. 哪一張圖片最能代表你心目中輝人和 Ggomo 的互動？", "options": {"A. 溫馨陪伴的日常": "A", "B. 互相嫌棄卻離不開彼此": "B", "C. 高冷且優雅的對視": "C"}},
+            {
+                "q": "2. 哪一張圖片最能代表你心目中輝人和Ggomo的互動？", 
+                "options": {"A. 溫馨陪伴的日常": "A", "B. 互相嫌棄卻離不開彼此": "B", "C. 高冷且優雅的對視": "C"},
+                "images": {"A": "q2_A.png", "B": "q2_B.png", "C": "q2_C.png"} 
+            },
             {"q": "3. 舞台演出中，輝人最吸引你的是？", "options": {"A. 發自內心的享受與開心的笑容": "A", "B. 即興的舞步、talking 時突然的撒嬌": "B", "C. 舉手投足間流露出的魅力、流暢的跳舞線條": "C"}},
             {"q": "4. 輝人的聲音是...", "options": {"A. 午後陽光，溫暖且療癒": "A", "B. 特調咖啡，層次豐富難以捉摸": "B", "C. 陳年紅酒，絲滑迷人且微醺": "C"}},
             {"q": "5. 看幕後花絮或綜藝時，你最喜歡輝人...", "options": {"A. 毫無顧忌地大笑，笑到酒窩深陷": "A", "B. 每次和團員玩遊戲都是贏家": "B", "C. 混亂中卻展現出成熟的樣子": "C"}},
@@ -68,7 +72,11 @@ LANG_MAP = {
         "restart_btn": "다시 하기",
         "questions": [
             {"q": "1. 휘인이 셀카를 올린 것을 봤을 때, 당신의 반응은?", "options": {"A. 꺄악! 어쩜 이렇게 귀여워! 꼬집어주고 싶어.": "A", "B. 역시 정휘인, 이 각도는 그녀만 소화할 수 있지.": "B", "C. 눈빛이 너무 깊고, 분위기 있어.": "C"}},
-            {"q": "2. 당신이 생각하는 휘인과 꼬모(Ggomo)의 상호작용을 가장 잘 나타내는 사진은?", "options": {"A. 따뜻한 일상 속 동반자": "A", "B. 서로 티격태격하지만 떨어질 수 없는 사이": "B", "C. 도도하고 우아한 눈맞춤": "C"}},
+            {
+                "q": "2. 당신이 생각하는 휘인과 꼬모(Ggomo)의 상호작용을 가장 잘 나타내는 사진은?", 
+                "options": {"A. 따뜻한 일상 속 동반자": "A", "B. 서로 티격태격하지만 떨어질 수 없는 사이": "B", "C. 도도하고 우아한 눈맞춤": "C"},
+                "images": {"A": "q2_A.png", "B": "q2_B.png", "C": "q2_C.png"}
+            },
             {"q": "3. 무대 할 때 휘인에게 가장 끌리는 점은?", "options": {"A. 진심으로 즐기는 모습과 행복한 미소.": "A", "B. 즉흥적인 춤, 토크 중 갑작스러운 애교.": "B", "C. 일거수일투족에서 묻어나는 매력, 부드러운 춤선.": "C"}},
             {"q": "4. 휘인의 목소리는...", "options": {"A. 오후의 햇살, 따뜻하고 힐링 돼.": "A", "B. 스페셜티 커피, 다채로운 매력에 예측할 수 없어.": "B", "C. 숙성된 와인, 실크처럼 부드럽고 매혹적이며 살짝 취하게 해.": "C"}},
             {"q": "5. 비하인드 영상이나 예능을 볼 때, 당신이 가장 좋아하는 휘인의 모습은...", "options": {"A. 보조개가 깊게 파일 정도로 거침없이 크게 웃을 때.": "A", "B. 멤버들과 게임할 때마다 항상 승자가 될 때.": "B", "C. 혼란스러운 와중에도 성숙한 모습을 보여줄 때.": "C"}},
@@ -90,7 +98,11 @@ LANG_MAP = {
         "restart_btn": "Restart",
         "questions": [
             {"q": "1. What is your reaction when you see Wheein post a selfie?", "options": {"A. Wow! How can she be so cute! I want to pinch her cheeks.": "A", "B. As expected of Jung Wheein, only she can pull off this angle.": "B", "C. Her eyes are so deep and elegant.": "C"}},
-            {"q": "2. Which picture best represents the interaction between Wheein and Ggomo in your mind?", "options": {"A. Warm daily companionship": "A", "B. Mutual bickering but inseparable": "B", "C. Cold and elegant eye contact": "C"}},
+            {
+                "q": "2. Which picture best represents the interaction between Wheein and Ggomo in your mind?", 
+                "options": {"A. Warm daily companionship": "A", "B. Mutual bickering but inseparable": "B", "C. Cold and elegant eye contact": "C"},
+                "images": {"A": "q2_A.png", "B": "q2_B.png", "C": "q2_C.png"}
+            },
             {"q": "3. What attracts you most about Wheein during stage performances?", "options": {"A. Her genuine enjoyment and happy smile.": "A", "B. Impromptu dance moves, and her sudden aegyo during talking segments.": "B", "C. The charm exuded in her every move, and her smooth dance lines.": "C"}},
             {"q": "4. Wheein's voice is...", "options": {"A. Afternoon sunshine, warm and healing": "A", "B. Specialty coffee, richly layered and unpredictable.": "B", "C. Aged red wine, silky, charming, and slightly intoxicating.": "C"}},
             {"q": "5. When watching behind-the-scenes or variety shows, you like it most when Wheein...", "options": {"A. Laughs out loud without holding back, showing off her deep dimples.": "A", "B. Ends up being the winner every time she plays games with the members.": "B", "C. Shows her mature side amidst the chaos.": "C"}},
@@ -217,11 +229,30 @@ elif st.session_state.step == -1:
 elif st.session_state.step < len(curr_data["questions"]):
     q_item = curr_data["questions"][st.session_state.step]
     st.write(f"**{q_item['q']}**")
-    for text, val in q_item["options"].items():
-        if st.button(text, key=f"btn_{st.session_state.step}_{val}"):
-            st.session_state.answers.append(val)
-            st.session_state.step += 1
-            st.rerun()
+    
+    # 這裡加入圖片選項的顯示邏輯
+    has_images = "images" in q_item
+    
+    # 使用 col 列來併排顯示圖片與按鈕
+    cols = st.columns(len(q_item["options"]))
+    
+    for idx, (text, val) in enumerate(q_item["options"].items()):
+        with cols[idx]:
+            # 如果這題有圖片，則在按鈕上方顯示圖片
+            if has_images and val in q_item["images"]:
+                image_base64 = get_base64_file(q_item["images"][val])
+                if image_base64:
+                    st.markdown(f"""
+                        <div style="text-align: center;">
+                            <img src="data:image/png;base64,{image_base64}" style="max-width: 100%; height: auto; border-radius: 10px;">
+                        </div>
+                    """, unsafe_allow_html=True)
+            
+            # 顯示按鈕
+            if st.button(text, key=f"btn_{st.session_state.step}_{val}", use_container_width=True):
+                st.session_state.answers.append(val)
+                st.session_state.step += 1
+                st.rerun()
 
 else:
     counts = Counter(st.session_state.answers)
