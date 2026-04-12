@@ -47,7 +47,7 @@ def save_result_to_gsheets(final_type):
     except Exception as e:
         pass
 
-# --- 3. 測驗資料內容 (含語法修正) ---
+# --- 3. 測驗資料內容 ---
 LANG_MAP = {
     "繁體中文": {
         "title": "輝人靈魂視角測驗",
@@ -68,7 +68,7 @@ LANG_MAP = {
         "results": {
             "A": {"type": "狗派：可愛元氣", "desc": "在你眼裡，輝人就是那個「定式可愛」的代表。你最容易被她的笑容、酒窩和親和力擊倒。"},
             "B": {"type": "貓派：古靈精怪", "desc": "你最欣賞輝人的藝術家氣質。在她身上你看到高傲卻好奇的靈魂。"},
-            "C": {"type": "狐狸派：極致性感", "desc": "你完全沉溺於輝人的舞台魅力與成熟風情。在她身上散發出致命的優雅。"}
+            "C": {"type": "狐狸派：極致性感", "desc": "你完全沉溺於輝人的舞台魅力與成熟風情。在你身上散發出致命的優雅。"}
         }
     },
     "한국어": {
@@ -169,10 +169,9 @@ st.markdown(f"""
     </style>
     """, unsafe_allow_html=True)
 
-# --- 5. 背景音樂 (修正：縮小寬度以隱藏進度條) ---
+# --- 5. 背景音樂 ---
 audio_base64 = get_base64_file("bgm.mp3")
 if audio_base64:
-    # 寬度設定為 44px 即可隱藏進度條，只留下播放鈕
     audio_html = f"""
         <div style="position: relative; z-index: 999; top: -150px; left: -10px; height: 0px;">
             <audio controls autoplay loop style="height: 35px; width: 44px; opacity: 0.85; border-radius: 50%; filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.2));">
@@ -183,15 +182,31 @@ if audio_base64:
     st.markdown(audio_html, unsafe_allow_html=True)
 
 # --- 6. 流程控制 ---
-if 'step' not in st.session_state: st.session_state.step = -1
+if 'step' not in st.session_state: st.session_state.step = -2  # 從 -2 (封面頁) 開始
 if 'answers' not in st.session_state: st.session_state.answers = []
 if 'lang' not in st.session_state: st.session_state.lang = "繁體中文"
 if 'recorded' not in st.session_state: st.session_state.recorded = False
 
 curr_data = LANG_MAP.get(st.session_state.lang, LANG_MAP["繁體中文"])
 
+# 新增：封面啟動頁邏輯
+if st.session_state.step == -2:
+    img_start = get_base64_file("Start screen.png")
+    if img_start:
+        st.markdown(f"""
+            <div style="text-align: center; margin-top: -150px;">
+                <img src="data:image/png;base64,{img_start}" style="width: 100%; border-radius: 15px;">
+            </div>
+            <div style="height: 20px;"></div>
+        """, unsafe_allow_html=True)
+    
+    # 點擊此按鈕進入語言選擇
+    if st.button("START / 進入測驗 / 시작하기", use_container_width=True):
+        st.session_state.step = -1
+        st.rerun()
+
 # A. 語言選擇
-if st.session_state.step == -1:
+elif st.session_state.step == -1:
     st.markdown(f"### {curr_data['select_lang']}")
     col1, col2, col3 = st.columns(3)
     if col1.button("繁體中文", use_container_width=True):
