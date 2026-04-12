@@ -38,11 +38,11 @@ def save_result_to_gsheets(final_type):
     except Exception as e:
         pass
 
-# --- 3. 測驗資料內容 (修正第二題與第六題圖片檔名) ---
+# --- 3. 測驗資料內容 (中、韓、英完全同步) ---
 LANG_MAP = {
     "繁體中文": {
         "title": "輝人靈魂視角測驗",
-        "select_lang": "請選擇語言 / Select Language",
+        "select_lang": "",
         "restart_btn": "重新測驗",
         "questions": [
             {"q": "1. 看到輝人發了一張自拍，你的反應是？", "options": {"A. 尖叫！怎麼那麼可愛！好想捏": "A", "B. 果然是丁輝人，這個角度只有她撐得住": "B", "C. 眼神好深邃，好有氣質": "C"}},
@@ -59,7 +59,7 @@ LANG_MAP = {
                 "options": {"A": "A", "B": "B", "C": "C"},
                 "images": {"A": "q6_A.jpg", "B": "q6_B.jpg", "C": "q6_C.jpg"}
             },
-            {"q": "7. 你覺得輝人的眼神最常透露...", "options": {"A. 純真且充滿好奇心": "A", "B. 搞怪且難以捉摸": "B", "C. 誘惑且充滿故事": "C"}},
+            {"q": "7. 你覺得輝人最常透露...", "options": {"A. 純真且充滿好奇心": "A", "B. 搞怪且難以捉摸": "B", "C. 誘惑且充滿故事": "C"}},
             {"q": "8. 如果演唱會最後只能再聽一首歌，你會選...", "options": {"A. 〈Wheee〉": "A", "B. 〈EASY〉": "B", "C. 〈Shhh〉": "C"}},
             {"q": "9. 你覺得輝人的刺青代表她的...", "options": {"A. 對生活的純真熱愛": "A", "B. 藝術家靈魂": "B", "C. 充滿故事的過往": "C"}},
             {"q": "10. 在 Mamamoo 裡，輝人是...", "options": {"A. 眾人愛的團寵": "A", "B. 帶來驚喜的鬼才": "B", "C. 團體的棟樑": "C"}}
@@ -132,62 +132,112 @@ LANG_MAP = {
     }
 }
 
-# --- 4. 狀態管理與 CSS ---
+# --- 4. 狀態管理與動態 CSS (優化結果頁背景邏輯) ---
 if 'step' not in st.session_state: st.session_state.step = -2
 if 'answers' not in st.session_state: st.session_state.answers = []
 if 'lang' not in st.session_state: st.session_state.lang = "繁體中文"
 if 'recorded' not in st.session_state: st.session_state.recorded = False
 
+# 載入所有圖片資源
 img_header = get_base64_file("Header.png")
 img_middle = get_base64_file("Middle.png")
 img_footer = get_base64_file("Footer.png")
 img_start = get_base64_file("Start screen.png")
 
+# 載入新的結果頁背景海報
+img_res_a = get_base64_file("result_A.png")
+img_res_b = get_base64_file("result_B.png")
+img_res_c = get_base64_file("result_C.png")
+
+# 初始化動態 CSS 變數
+dynamic_bg_css = ""
+container_padding_settings = "padding: 280px 20px 300px 20px !important;" # 預設測驗頁 padding
+start_screen_btn_css = ""
+
+# --- 核心邏輯：動態判斷背景樣式 ---
+# 獲取當前語言資料以判斷總題數
+current_data = LANG_MAP.get(st.session_state.lang, LANG_MAP["繁體中文"])
+num_questions = len(current_data["questions"])
+
 if st.session_state.step == -2:
-    current_bg = f'url("data:image/png;base64,{img_start}")' if img_start else "none"
-    bg_settings = f"""
-        background-image: {current_bg} !important;
+    # 階段 A: 封面啟動頁 (維持原樣)
+    current_bg_base64 = f'url("data:image/png;base64,{img_start}")' if img_start else "none"
+    dynamic_bg_css = f"""
+        background-image: {current_bg_base64} !important;
         background-position: top center !important;
         background-repeat: no-repeat !important;
         background-size: 100% auto !important;
     """
-    custom_btn_style = """
-        .stButton > button {
-            position: fixed;
-            top: 0; left: 0;
-            width: 100vw !important;
-            height: 100vh !important;
-            opacity: 0 !important;
-            z-index: 9999;
-            border: none !important;
-            cursor: pointer;
-        }
+    # 全螢幕隱形按鈕 CSS
+    start_screen_btn_css = """
+        .stButton > button { position: fixed; top: 0; left: 0; width: 100vw !important; height: 100vh !important;
+                             opacity: 0 !important; z-index: 9999; border: none !important; cursor: pointer; }
     """
+
+elif st.session_state.step >= num_questions and st.session_state.step > -1:
+    # 階段 B: 結果顯示頁 (優化：跳轉到相對圖片背景)
+    # 提前計算最高分選項以確定背景
+    if st.session_state.answers:
+        counts = Counter(st.session_state.answers)
+        winning_code = counts.most_common(1)[0][0] # 獲取 'A', 'B', 或 'C'
+
+        # 將選項代碼映射到載入的圖片資源
+        result_bg_asset_map = {
+            "A": img_res_a,
+            "B": img_res_b,
+            "C": img_res_c
+        }
+        win_bg_base64 = result_bg_asset_map.get(winning_code, "none")
+
+        if win_bg_base64 != "none":
+            # 設置專屬的 Poster 背景，填滿全螢幕
+            win_bg_url = f'url("data:image/png;base64,{win_bg_base64}")'
+            dynamic_bg_css = f"""
+                background-image: {win_bg_url} !important;
+                background-position: center center !important;
+                background-repeat: no-repeat !important;
+                background-size: cover !important; /* 填滿全螢幕 */
+            """
+        else:
+            # 圖片載入失敗的紅底 fallback
+            dynamic_bg_css = "background-image: none !important;"
+    else:
+         dynamic_bg_css = "background-image: none !important;"
+    
+    # 結果頁使用預設 padding 避開 header
+    container_padding_settings = "padding: 280px 20px 300px 20px !important;"
+
 else:
+    # 階段 C: 正常測驗流程/語言選擇 (維持原本的三段式組合背景)
     bg_h = f'url("data:image/png;base64,{img_header}")' if img_header else "none"
     bg_f = f'url("data:image/png;base64,{img_footer}")' if img_footer else "none"
     bg_m = f'url("data:image/png;base64,{img_middle}")' if img_middle else "none"
-    bg_settings = f"""
+    dynamic_bg_css = f"""
         background-image: {bg_h}, {bg_f}, {bg_m} !important;
         background-position: top center, bottom center, top center !important;
         background-repeat: no-repeat, no-repeat, repeat-y !important;
         background-size: min(100%, 420px) auto !important;
     """
-    custom_btn_style = ""
+    container_padding_settings = "padding: 280px 20px 300px 20px !important;"
 
+# 應用 CSS
 st.markdown(f"""
     <style>
     header {{ visibility: hidden !important; height: 0px !important; }}
     .stApp {{ 
-        background-color: #9d2933;
-        {bg_settings}
+        background-color: #9d2933; /* fallback 紅色 */
+        {dynamic_bg_css}
     }}
     .block-container {{
         max-width: 420px !important; 
         margin: auto; 
-        padding: 280px 20px 300px 20px !important;
+        {container_padding_settings}
     }}
-    {custom_btn_style}
+    
+    /* 隱形按鈕 CSS (只在封面頁啟用) */
+    {start_screen_btn_css}
+    
+    /* 原有的樣式保持不變 */
     .stButton > button {{ 
         width: 100%; border-radius: 12px; background: white; color: #b71c1c; 
         font-weight: bold; border: 1.5px solid #b71c1c; margin-bottom: 5px;
@@ -202,6 +252,8 @@ st.markdown(f"""
         background: rgba(255,255,255,0.9); padding: 20px; border-radius: 20px; 
         text-align: center; color: black; border: 2px solid #b71c1c;
     }}
+    .result-box h2 {{ font-size: 1.6em; margin-top: 0px !important; margin-bottom: 5px !important; }}
+    .result-box p {{ font-size: 0.95em; line-height: 1.6; margin-top: 0px !important; }}
     </style>
     """, unsafe_allow_html=True)
 
@@ -217,7 +269,7 @@ if audio_base64:
     """
     st.markdown(audio_html, unsafe_allow_html=True)
 
-# --- 6. 流程控制 ---
+# --- 6. 流程控制 (內容保持不變，CSS邏輯已移至上方) ---
 curr_data = LANG_MAP.get(st.session_state.lang, LANG_MAP["繁體中文"])
 
 if st.session_state.step == -2:
@@ -242,15 +294,12 @@ elif st.session_state.step < len(curr_data["questions"]):
     q_item = curr_data["questions"][st.session_state.step]
     st.write(f"**{q_item['q']}**")
     
-    # 圖片選項顯示邏輯
     has_images = "images" in q_item
     cols = st.columns(len(q_item["options"]))
     
     for idx, (text, val) in enumerate(q_item["options"].items()):
         with cols[idx]:
-            # 如果這題有圖片，在按鈕上方顯示圖片
             if has_images and val in q_item["images"]:
-                # 讀取 JPG 檔案
                 image_base64 = get_base64_file(q_item["images"][val])
                 if image_base64:
                     st.markdown(f"""
@@ -259,26 +308,31 @@ elif st.session_state.step < len(curr_data["questions"]):
                         </div>
                     """, unsafe_allow_html=True)
             
-            # 顯示按鈕
             if st.button(text, key=f"btn_{st.session_state.step}_{val}", use_container_width=True):
                 st.session_state.answers.append(val)
                 st.session_state.step += 1
                 st.rerun()
 
 else:
+    # 這裡只進行結果顯示與儲存，背景控制已由上方的 CSS 動態邏輯處理
     counts = Counter(st.session_state.answers)
     top_choice = counts.most_common(1)[0][0]
     res = curr_data["results"][top_choice]
+    
     if not st.session_state.recorded:
         save_result_to_gsheets(res['type'])
         st.session_state.recorded = True
+
     st.balloons()
+    # 顯示語系對應的結果框文字
     st.markdown(f"""
         <div class='result-box'>
             <h2>{res['type']}</h2>
             <p>{res['desc']}</p>
         </div>
     """, unsafe_allow_html=True)
+    
+    st.write("") 
     if st.button(curr_data["restart_btn"], use_container_width=True):
         st.session_state.step = -1
         st.session_state.answers = []
