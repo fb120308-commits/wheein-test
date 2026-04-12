@@ -4,8 +4,7 @@ import pandas as pd
 from collections import Counter
 from streamlit_gsheets import GSheetsConnection
 
-# --- 1. 檔案處理函數 ---
-@st.cache_data
+# --- 1. 檔案處理函數 (移除 cache，強制每次讀取最新圖片！) ---
 def get_base64_file(file_path):
     try:
         with open(file_path, "rb") as f:
@@ -179,7 +178,6 @@ elif st.session_state.step >= num_questions and st.session_state.step > -1:
         result_bg_asset_map = {"A": img_res_a, "B": img_res_b, "C": img_res_c}
         win_bg_base64 = result_bg_asset_map.get(winning_code, "")
 
-        # 加上檢查機制：確定有讀到圖片才使用專屬背景，避免破圖變紅底
         if win_bg_base64:
             win_bg_url = f'url("data:image/png;base64,{win_bg_base64}")'
             dynamic_bg_css = f"""
@@ -189,7 +187,7 @@ elif st.session_state.step >= num_questions and st.session_state.step > -1:
                 background-size: 100% auto !important; 
             """
         else:
-            # 萬一圖片還是沒讀到，退回使用普通的三段式背景
+            # 萬一真的沒抓到，退回使用普通的三段式背景
             bg_h = f'url("data:image/png;base64,{img_header}")' if img_header else "none"
             bg_f = f'url("data:image/png;base64,{img_footer}")' if img_footer else "none"
             bg_m = f'url("data:image/png;base64,{img_middle}")' if img_middle else "none"
@@ -240,7 +238,7 @@ st.markdown(f"""
         color: #333333 !important;
     }}
     
-    /* 優化：讓結果文字框變透明，完美融入背景筆記本 */
+    /* 結果頁文字框透明化 */
     .result-box {{ 
         background: transparent; 
         padding: 10px; 
@@ -332,7 +330,6 @@ else:
 
     st.balloons()
     
-    # 直接在筆記本上顯示文字 (無白底框)
     st.markdown(f"""
         <div class='result-box'>
             <h2>{res['type']}</h2>
