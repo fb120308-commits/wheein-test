@@ -38,11 +38,11 @@ def save_result_to_gsheets(final_type):
     except Exception as e:
         pass
 
-# --- 3. 測驗資料內容 (中、韓、英完全同步) ---
+# --- 3. 測驗資料內容 ---
 LANG_MAP = {
     "繁體中文": {
         "title": "輝人靈魂視角測驗",
-        "select_lang": "",
+        "select_lang": "請選擇語言 / Select Language",
         "restart_btn": "重新測驗",
         "questions": [
             {"q": "1. 看到輝人發了一張自拍，你的反應是？", "options": {"A. 尖叫！怎麼那麼可愛！好想捏": "A", "B. 果然是丁輝人，這個角度只有她撐得住": "B", "C. 眼神好深邃，好有氣質": "C"}},
@@ -59,7 +59,7 @@ LANG_MAP = {
                 "options": {"A": "A", "B": "B", "C": "C"},
                 "images": {"A": "q6_A.jpg", "B": "q6_B.jpg", "C": "q6_C.jpg"}
             },
-            {"q": "7. 你覺得輝人最常透露...", "options": {"A. 純真且充滿好奇心": "A", "B. 搞怪且難以捉摸": "B", "C. 誘惑且充滿故事": "C"}},
+            {"q": "7. 你覺得輝人的眼神最常透露...", "options": {"A. 純真且充滿好奇心": "A", "B. 搞怪且難以捉摸": "B", "C. 誘惑且充滿故事": "C"}},
             {"q": "8. 如果演唱會最後只能再聽一首歌，你會選...", "options": {"A. 〈Wheee〉": "A", "B. 〈EASY〉": "B", "C. 〈Shhh〉": "C"}},
             {"q": "9. 你覺得輝人的刺青代表她的...", "options": {"A. 對生活的純真熱愛": "A", "B. 藝術家靈魂": "B", "C. 充滿故事的過往": "C"}},
             {"q": "10. 在 Mamamoo 裡，輝人是...", "options": {"A. 眾人愛的團寵": "A", "B. 帶來驚喜的鬼才": "B", "C. 團體的棟樑": "C"}}
@@ -132,7 +132,7 @@ LANG_MAP = {
     }
 }
 
-# --- 4. 狀態管理與動態 CSS (優化結果頁背景邏輯) ---
+# --- 4. 狀態管理與動態 CSS ---
 if 'step' not in st.session_state: st.session_state.step = -2
 if 'answers' not in st.session_state: st.session_state.answers = []
 if 'lang' not in st.session_state: st.session_state.lang = "繁體中文"
@@ -149,18 +149,15 @@ img_res_a = get_base64_file("result_A.png")
 img_res_b = get_base64_file("result_B.png")
 img_res_c = get_base64_file("result_C.png")
 
-# 初始化動態 CSS 變數
 dynamic_bg_css = ""
-container_padding_settings = "padding: 280px 20px 300px 20px !important;" # 預設測驗頁 padding
+container_padding_settings = "padding: 280px 20px 300px 20px !important;"
 start_screen_btn_css = ""
 
-# --- 核心邏輯：動態判斷背景樣式 ---
-# 獲取當前語言資料以判斷總題數
 current_data = LANG_MAP.get(st.session_state.lang, LANG_MAP["繁體中文"])
 num_questions = len(current_data["questions"])
 
 if st.session_state.step == -2:
-    # 階段 A: 封面啟動頁 (維持原樣)
+    # 封面頁
     current_bg_base64 = f'url("data:image/png;base64,{img_start}")' if img_start else "none"
     dynamic_bg_css = f"""
         background-image: {current_bg_base64} !important;
@@ -168,47 +165,44 @@ if st.session_state.step == -2:
         background-repeat: no-repeat !important;
         background-size: 100% auto !important;
     """
-    # 全螢幕隱形按鈕 CSS
     start_screen_btn_css = """
         .stButton > button { position: fixed; top: 0; left: 0; width: 100vw !important; height: 100vh !important;
                              opacity: 0 !important; z-index: 9999; border: none !important; cursor: pointer; }
     """
 
 elif st.session_state.step >= num_questions and st.session_state.step > -1:
-    # 階段 B: 結果顯示頁 (優化：跳轉到相對圖片背景)
-    # 提前計算最高分選項以確定背景
+    # 結果頁：根據最高分選項換背景
     if st.session_state.answers:
         counts = Counter(st.session_state.answers)
-        winning_code = counts.most_common(1)[0][0] # 獲取 'A', 'B', 或 'C'
+        winning_code = counts.most_common(1)[0][0] 
 
-        # 將選項代碼映射到載入的圖片資源
-        result_bg_asset_map = {
-            "A": img_res_a,
-            "B": img_res_b,
-            "C": img_res_c
-        }
-        win_bg_base64 = result_bg_asset_map.get(winning_code, "none")
+        result_bg_asset_map = {"A": img_res_a, "B": img_res_b, "C": img_res_c}
+        win_bg_base64 = result_bg_asset_map.get(winning_code, "")
 
-        if win_bg_base64 != "none":
-            # 設置專屬的 Poster 背景，填滿全螢幕
+        # 加上檢查機制：確定有讀到圖片才使用專屬背景，避免破圖變紅底
+        if win_bg_base64:
             win_bg_url = f'url("data:image/png;base64,{win_bg_base64}")'
             dynamic_bg_css = f"""
                 background-image: {win_bg_url} !important;
-                background-position: center center !important;
+                background-position: top center !important;
                 background-repeat: no-repeat !important;
-                background-size: cover !important; /* 填滿全螢幕 */
+                background-size: 100% auto !important; 
             """
         else:
-            # 圖片載入失敗的紅底 fallback
-            dynamic_bg_css = "background-image: none !important;"
-    else:
-         dynamic_bg_css = "background-image: none !important;"
-    
-    # 結果頁使用預設 padding 避開 header
-    container_padding_settings = "padding: 280px 20px 300px 20px !important;"
+            # 萬一圖片還是沒讀到，退回使用普通的三段式背景
+            bg_h = f'url("data:image/png;base64,{img_header}")' if img_header else "none"
+            bg_f = f'url("data:image/png;base64,{img_footer}")' if img_footer else "none"
+            bg_m = f'url("data:image/png;base64,{img_middle}")' if img_middle else "none"
+            dynamic_bg_css = f"""
+                background-image: {bg_h}, {bg_f}, {bg_m} !important;
+                background-position: top center, bottom center, top center !important;
+                background-repeat: no-repeat, no-repeat, repeat-y !important;
+                background-size: min(100%, 420px) auto !important;
+            """
+    container_padding_settings = "padding: 400px 20px 300px 20px !important;" # 加大 Padding 把按鈕往下推
 
 else:
-    # 階段 C: 正常測驗流程/語言選擇 (維持原本的三段式組合背景)
+    # 正常測驗頁
     bg_h = f'url("data:image/png;base64,{img_header}")' if img_header else "none"
     bg_f = f'url("data:image/png;base64,{img_footer}")' if img_footer else "none"
     bg_m = f'url("data:image/png;base64,{img_middle}")' if img_middle else "none"
@@ -220,12 +214,11 @@ else:
     """
     container_padding_settings = "padding: 280px 20px 300px 20px !important;"
 
-# 應用 CSS
 st.markdown(f"""
     <style>
     header {{ visibility: hidden !important; height: 0px !important; }}
     .stApp {{ 
-        background-color: #9d2933; /* fallback 紅色 */
+        background-color: #9d2933; 
         {dynamic_bg_css}
     }}
     .block-container {{
@@ -234,10 +227,8 @@ st.markdown(f"""
         {container_padding_settings}
     }}
     
-    /* 隱形按鈕 CSS (只在封面頁啟用) */
     {start_screen_btn_css}
     
-    /* 原有的樣式保持不變 */
     .stButton > button {{ 
         width: 100%; border-radius: 12px; background: white; color: #b71c1c; 
         font-weight: bold; border: 1.5px solid #b71c1c; margin-bottom: 5px;
@@ -248,12 +239,29 @@ st.markdown(f"""
         border-radius: 10px; 
         color: #333333 !important;
     }}
+    
+    /* 優化：讓結果文字框變透明，完美融入背景筆記本 */
     .result-box {{ 
-        background: rgba(255,255,255,0.9); padding: 20px; border-radius: 20px; 
-        text-align: center; color: black; border: 2px solid #b71c1c;
+        background: transparent; 
+        padding: 10px; 
+        text-align: center; 
+        border: none;
+        margin-top: 10px;
     }}
-    .result-box h2 {{ font-size: 1.6em; margin-top: 0px !important; margin-bottom: 5px !important; }}
-    .result-box p {{ font-size: 0.95em; line-height: 1.6; margin-top: 0px !important; }}
+    .result-box h2 {{ 
+        font-size: 2.2em; 
+        margin-top: 0px !important; 
+        margin-bottom: 10px !important; 
+        color: #b71c1c;
+        text-shadow: 1px 1px 3px rgba(255,255,255,0.8);
+    }}
+    .result-box p {{ 
+        font-size: 1.3em; 
+        font-weight: bold; 
+        line-height: 1.6; 
+        margin-top: 0px !important; 
+        color: #3d1b1b;
+    }}
     </style>
     """, unsafe_allow_html=True)
 
@@ -269,7 +277,7 @@ if audio_base64:
     """
     st.markdown(audio_html, unsafe_allow_html=True)
 
-# --- 6. 流程控制 (內容保持不變，CSS邏輯已移至上方) ---
+# --- 6. 流程控制 ---
 curr_data = LANG_MAP.get(st.session_state.lang, LANG_MAP["繁體中文"])
 
 if st.session_state.step == -2:
@@ -314,7 +322,6 @@ elif st.session_state.step < len(curr_data["questions"]):
                 st.rerun()
 
 else:
-    # 這裡只進行結果顯示與儲存，背景控制已由上方的 CSS 動態邏輯處理
     counts = Counter(st.session_state.answers)
     top_choice = counts.most_common(1)[0][0]
     res = curr_data["results"][top_choice]
@@ -324,7 +331,8 @@ else:
         st.session_state.recorded = True
 
     st.balloons()
-    # 顯示語系對應的結果框文字
+    
+    # 直接在筆記本上顯示文字 (無白底框)
     st.markdown(f"""
         <div class='result-box'>
             <h2>{res['type']}</h2>
