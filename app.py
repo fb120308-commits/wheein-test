@@ -18,30 +18,21 @@ SHEET_URL = "https://docs.google.com/spreadsheets/d/18SouKWNtcmN6jt5yOqFq6tbjSUs
 conn = st.connection("gsheets", type=GSheetsConnection)
 
 def save_result_to_gsheets(final_type):
-    """將測驗結果存入 Google Sheets"""
     try:
-        # 1. 讀取現有資料
         existing_df = conn.read(spreadsheet=SHEET_URL, ttl=0)
-        
-        # 2. 清理無效行
         if existing_df is not None:
             existing_df = existing_df.dropna(how='all')
         else:
             existing_df = pd.DataFrame(columns=["timestamp", "result"])
-            
     except Exception as e:
         return
 
-    # 3. 準備新資料
     new_row = pd.DataFrame({
         "timestamp": [pd.Timestamp.now(tz='Asia/Taipei').strftime("%Y-%m-%d %H:%M:%S")], 
         "result": [final_type]
     })
     
-    # 4. 接龍更新
     updated_df = pd.concat([existing_df, new_row], ignore_index=True)
-    
-    # 5. 寫回雲端
     try:
         conn.update(worksheet="工作表1", data=updated_df, spreadsheet=SHEET_URL)
     except Exception as e:
@@ -55,7 +46,7 @@ LANG_MAP = {
         "restart_btn": "重新測驗",
         "questions": [
             {"q": "1. 看到輝人發了一張素顏捏臉自拍，妳的反應？", "options": {"A. 尖叫！怎麼會這麼軟萌，好想捏一把！": "A", "B. 覺得表情很逗趣，這角度只有她撐得住。": "B", "C. 眼神依然有戲，透出清冷的氣質。": "C"}},
-            {"q": "2. 輝人跟 Ggomo 的互動中，什麼畫面最深刻？", "options": {"A. 輝人跟 Ggomo 說話，牠卻不理她。": "A", "B. 兩者都散發「我行我素」的氛圍。": "B", "C. 抱著 Ggomo 時，溫柔帶點清傲的側臉.": "C"}},
+            {"q": "2. 輝人跟 Ggomo 的互動中，什麼畫面最深刻？", "options": {"A. 輝人跟 Ggomo 說話，牠卻不理她。": "A", "B. 兩者都散發「我行我素」的氛圍。": "B", "C. 抱著 Ggomo 時，溫柔帶點清傲的側臉。": "C"}},
             {"q": "3. 舞台演出中，輝人最吸引你的是？", "options": {"A. 發自內心的享受與開心的笑容。": "A", "B. 旋律即興與獨特的舞台漫步。": "B", "C. 舉手投足間流露出的魅惑感。": "C"}},
             {"q": "4. 你覺得輝人的聲音特質偏向？", "options": {"A. 像午後陽光一樣溫暖治癒。": "A", "B. 像精品咖啡，層次豐富難以捉摸。": "B", "C. 像陳年紅酒，絲滑、迷人且微醺。": "C"}},
             {"q": "5. 看輝人的花絮或綜藝時，你最喜歡她？", "options": {"A. 毫無顧忌的大笑，笑到酒窩深陷。": "A", "B. 突然冒出的四次元發言或吐槽。": "B", "C. 混亂中也能保持優雅成熟的樣子。": "C"}},
@@ -117,107 +108,78 @@ LANG_MAP = {
     }
 }
 
-# --- 4. CSS 樣式與狀態控制 ---
-
-# 初始化狀態 (必須放在 CSS 設定之前，因為 CSS 需要判斷狀態)
-if 'step' not in st.session_state: st.session_state.step = -2  # 從 -2 (封面背景頁) 開始
+# --- 4. 狀態管理與 CSS ---
+if 'step' not in st.session_state: st.session_state.step = -2
 if 'answers' not in st.session_state: st.session_state.answers = []
 if 'lang' not in st.session_state: st.session_state.lang = "繁體中文"
 if 'recorded' not in st.session_state: st.session_state.recorded = False
 
-# 讀取原本的背景圖
+# 載入所有圖片
 img_header = get_base64_file("Header.png")
 img_middle = get_base64_file("Middle.png")
 img_footer = get_base64_file("Footer.png")
-
-# 讀取新的封面圖
 img_start = get_base64_file("Start screen.png")
 
-# 初始化動態 CSS 變數
-bg_final = "none"
-block_padding = "280px 20px 300px 20px !important" # 原本的 padding
-
-# --- 核心邏輯修改：動態更換背景 ---
+# 動態判斷當前背景設定
 if st.session_state.step == -2:
-    # 1. 封面頁狀態：使用 Start screen.png 作為唯一背景，並填滿
-    if img_start:
-        bg_start = f'url("data:image/png;base64,{img_start}")'
-        # 強制背景置中、不重複、填滿區域 (cover)
-        bg_final = f"{bg_start} center center / cover no-repeat !important"
-    
-    # 2. 封面頁狀態：調整 padding，讓 START 按鈕不要被 Header 擋住 (因為此時沒 Header)
-    # 這裡的 padding-top 縮小，讓按鈕靠下浮現
-    block_padding = "450px 20px 50px 20px !important" 
-
+    # 封面頁：只顯示 Start screen 且滿版
+    current_bg = f'url("data:image/png;base64,{img_start}")' if img_start else "none"
+    bg_settings = f"""
+        background-image: {current_bg} !important;
+        background-position: center center !important;
+        background-repeat: no-repeat !important;
+        background-size: contain !important;
+    """
+    padding_settings = "padding: 550px 20px 50px 20px !important;" # 讓按鈕在圖片下方
 else:
-    # 3. 正常測驗狀態：使用原本的紅底 + Header/Footer 三段式背景
-    bg_header = f'url("data:image/png;base64,{img_header}")' if img_header else "none"
-    bg_middle = f'url("data:image/png;base64,{img_middle}")' if img_middle else "none"
-    bg_footer = f'url("data:image/png;base64,{img_footer}")' if img_footer else "none"
-    
-    # 原本的複雜背景設定
-    bg_final = f"{bg_header}, {bg_footer}, {bg_middle} !important"
+    # 測驗頁：原本的三段式背景
+    bg_h = f'url("data:image/png;base64,{img_header}")' if img_header else "none"
+    bg_f = f'url("data:image/png;base64,{img_footer}")' if img_footer else "none"
+    bg_m = f'url("data:image/png;base64,{img_middle}")' if img_middle else "none"
+    bg_settings = f"""
+        background-image: {bg_h}, {bg_f}, {bg_m} !important;
+        background-position: top center, bottom center, top center !important;
+        background-repeat: no-repeat, no-repeat, repeat-y !important;
+        background-size: min(100%, 420px) auto !important;
+    """
+    padding_settings = "padding: 280px 20px 300px 20px !important;"
 
-# --- 應用 CSS ---
 st.markdown(f"""
     <style>
     header {{ visibility: hidden !important; height: 0px !important; }}
-    
-    /* 這裡應用動態計算出的背景 (bg_final) */
     .stApp {{ 
-        background-color: #9d2933; /* 基礎紅底 */
-        background-image: {bg_final};
-        
-        # 只有在非封面頁時，才應用原本的多重位置設定
-        {"background-position: top center, bottom center, top center !important;" if st.session_state.step != -2 else ""}
-        {"background-repeat: no-repeat, no-repeat, repeat-y !important;" if st.session_state.step != -2 else ""}
-        
-        background-size: min(100%, 420px) auto !important; 
+        background-color: #9d2933;
+        {bg_settings}
     }}
-    
-    /* 這裡應用動態計算出的 Padding (block_padding) */
     .block-container {{
         max-width: 420px !important; 
         margin: auto; 
-        padding: {block_padding}; 
+        {padding_settings}
     }}
-    
-    /* 以下樣式保持不變 */
     h1, h2, h3, h4 {{ color: #3d1b1b !important; text-align: center; }}
-    
     .stMarkdown p {{
         background-color: rgba(255, 255, 255, 0.6);
         padding: 8px 15px !important; 
         border-radius: 10px; 
         color: #333333 !important;
     }}
-    
     .stButton > button {{ 
         width: 100%; border-radius: 12px; background: white; color: #b71c1c; 
         font-weight: bold; border: 1.5px solid #b71c1c; margin-bottom: 5px;
-        # 增加一點陰影，讓按鈕在背景上更明顯
-        box-shadow: 0px 4px 6px rgba(0,0,0,0.1);
     }}
-
     .result-box {{ 
         background: rgba(255,255,255,0.9); padding: 20px; border-radius: 20px; 
         text-align: center; color: black; border: 2px solid #b71c1c;
     }}
-    .result-box h2 {{ 
-        font-size: 1.6em; margin-top: 0px !important; margin-bottom: 5px !important; 
-    }}
-    .result-box p {{ 
-        font-size: 0.95em; line-height: 1.6; margin-top: 0px !important; 
-    }}
     </style>
     """, unsafe_allow_html=True)
 
-# --- 5. 背景音樂 (保持不變) ---
+# --- 5. 背景音樂 ---
 audio_base64 = get_base64_file("bgm.mp3")
 if audio_base64:
     audio_html = f"""
         <div style="position: relative; z-index: 999; top: -150px; left: -10px; height: 0px;">
-            <audio controls autoplay loop style="height: 35px; width: 44px; opacity: 0.85; border-radius: 50%; filter: drop-shadow(0px 2px 4px rgba(0,0,0,0.2));">
+            <audio controls autoplay loop style="height: 35px; width: 44px; opacity: 0.85; border-radius: 50%;">
                 <source src="data:audio/mp3;base64,{audio_base64}" type="audio/mp3">
             </audio>
         </div>
@@ -225,27 +187,14 @@ if audio_base64:
     st.markdown(audio_html, unsafe_allow_html=True)
 
 # --- 6. 流程控制 ---
-
-# 重新取得當前語言資料 (防止 Restart 後出錯)
 curr_data = LANG_MAP.get(st.session_state.lang, LANG_MAP["繁體中文"])
 
-# 新增：封面啟動頁邏輯
 if st.session_state.step == -2:
-    # 這裡什麼都不用畫 (例如 st.image)，因為圖片已經在 CSS 的背景裡了。
-    
-    # 畫一個提示文字（可選，增加點擊感，背景半透明）
-    st.markdown(f"""
-        <div style="text-align: center; background-color: rgba(255,255,255,0.5); padding: 10px; border-radius: 10px; margin-bottom: 10px;">
-            <span style="color: #3d1b1b; font-weight: bold;">2026 Whee In Birthday Event</span>
-        </div>
-    """, unsafe_allow_html=True)
-
-    # 畫 START 按鈕
+    # 封面頁只需要放一個進入按鈕，背景已經由 CSS 處理
     if st.button("START / 進入測驗 / 시작하기", use_container_width=True):
         st.session_state.step = -1
         st.rerun()
 
-# A. 語言選擇 (原有的邏輯，保持不變)
 elif st.session_state.step == -1:
     st.markdown(f"### {curr_data['select_lang']}")
     col1, col2, col3 = st.columns(3)
@@ -259,37 +208,24 @@ elif st.session_state.step == -1:
         st.session_state.lang, st.session_state.step = "English", 0
         st.rerun()
 
-# B. 題目進行 (保持不變)
 elif st.session_state.step < len(curr_data["questions"]):
     q_item = curr_data["questions"][st.session_state.step]
     st.write(f"**{q_item['q']}**")
-    
     for text, val in q_item["options"].items():
         if st.button(text, key=f"btn_{st.session_state.step}_{val}"):
             st.session_state.answers.append(val)
             st.session_state.step += 1
             st.rerun()
 
-# C. 結果顯示 (保持不變)
 else:
     counts = Counter(st.session_state.answers)
     top_choice = counts.most_common(1)[0][0]
     res = curr_data["results"][top_choice]
-    
-    # 儲存結果
     if not st.session_state.recorded:
         save_result_to_gsheets(res['type'])
         st.session_state.recorded = True
-
     st.balloons()
-    st.markdown(f"""
-        <div class='result-box'>
-            <h2>{res['type']}</h2>
-            <p>{res['desc']}</p>
-        </div>
-    """, unsafe_allow_html=True)
-    
-    st.write("") 
+    st.markdown(f"<div class='result-box'><h2>{res['type']}</h2><p>{res['desc']}</p></div>", unsafe_allow_html=True)
     if st.button(curr_data["restart_btn"], use_container_width=True):
         st.session_state.step = -1
         st.session_state.answers = []
