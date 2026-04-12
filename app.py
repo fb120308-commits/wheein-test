@@ -114,21 +114,23 @@ if 'answers' not in st.session_state: st.session_state.answers = []
 if 'lang' not in st.session_state: st.session_state.lang = "繁體中文"
 if 'recorded' not in st.session_state: st.session_state.recorded = False
 
+# 載入所有圖片資源
 img_header = get_base64_file("Header.png")
 img_middle = get_base64_file("Middle.png")
 img_footer = get_base64_file("Footer.png")
 img_start = get_base64_file("Start screen.png")
 
-# 動態判斷當前背景與隱形成效
+# --- 動態背景與按鈕 CSS 邏輯 ---
 if st.session_state.step == -2:
+    # 封面頁：背景設定為對齊頂部 (top center)，寬度撐滿 (100% auto)
     current_bg = f'url("data:image/png;base64,{img_start}")' if img_start else "none"
     bg_settings = f"""
         background-image: {current_bg} !important;
-        background-position: center center !important;
+        background-position: top center !important;
         background-repeat: no-repeat !important;
-        background-size: cover !important;
+        background-size: 100% auto !important;
     """
-    # 讓按鈕隱形並撐滿整個 block-container 區域
+    # 設置全螢幕隱形按鈕
     custom_btn_style = """
         .stButton > button {
             position: fixed;
@@ -138,9 +140,11 @@ if st.session_state.step == -2:
             opacity: 0 !important;
             z-index: 9999;
             border: none !important;
+            cursor: pointer;
         }
     """
 else:
+    # 測驗頁：原本的三段式組合背景
     bg_h = f'url("data:image/png;base64,{img_header}")' if img_header else "none"
     bg_f = f'url("data:image/png;base64,{img_footer}")' if img_footer else "none"
     bg_m = f'url("data:image/png;base64,{img_middle}")' if img_middle else "none"
@@ -164,8 +168,11 @@ st.markdown(f"""
         margin: auto; 
         padding: 280px 20px 300px 20px !important;
     }}
+    
+    /* 隱形按鈕專用 CSS */
     {custom_btn_style}
     
+    /* 測驗中按鈕樣式保持不變 */
     .stButton > button {{ 
         width: 100%; border-radius: 12px; background: white; color: #b71c1c; 
         font-weight: bold; border: 1.5px solid #b71c1c; margin-bottom: 5px;
@@ -174,6 +181,7 @@ st.markdown(f"""
         background-color: rgba(255, 255, 255, 0.6);
         padding: 8px 15px !important; 
         border-radius: 10px; 
+        color: #333333 !important;
     }}
     .result-box {{ 
         background: rgba(255,255,255,0.9); padding: 20px; border-radius: 20px; 
@@ -186,8 +194,8 @@ st.markdown(f"""
 audio_base64 = get_base64_file("bgm.mp3")
 if audio_base64:
     audio_html = f"""
-        <div style="position: fixed; z-index: 1000; top: 10px; left: 10px;">
-            <audio controls autoplay loop style="height: 35px; width: 44px; opacity: 0.6;">
+        <div style="position: fixed; z-index: 10000; top: 15px; left: 15px; height: 0px;">
+            <audio controls autoplay loop style="height: 35px; width: 44px; opacity: 0.7; border-radius: 50%;">
                 <source src="data:audio/mp3;base64,{audio_base64}" type="audio/mp3">
             </audio>
         </div>
@@ -198,21 +206,21 @@ if audio_base64:
 curr_data = LANG_MAP.get(st.session_state.lang, LANG_MAP["繁體中文"])
 
 if st.session_state.step == -2:
-    # 這裡放置一個全螢幕的隱形按鈕
-    if st.button("INVISIBLE_START_BUTTON"):
+    # 封面狀態：放置一個覆蓋全螢幕的隱形按鈕，隨處點擊即可進入
+    if st.button("CLICK_TO_START"):
         st.session_state.step = -1
         st.rerun()
 
 elif st.session_state.step == -1:
     st.markdown(f"### {curr_data['select_lang']}")
     col1, col2, col3 = st.columns(3)
-    if col1.button("繁體中文"):
+    if col1.button("繁體中文", use_container_width=True):
         st.session_state.lang, st.session_state.step = "繁體中文", 0
         st.rerun()
-    if col2.button("한국어"):
+    if col2.button("한국어", use_container_width=True):
         st.session_state.lang, st.session_state.step = "한국어", 0
         st.rerun()
-    if col3.button("English"):
+    if col3.button("English", use_container_width=True):
         st.session_state.lang, st.session_state.step = "English", 0
         st.rerun()
 
@@ -234,7 +242,7 @@ else:
         st.session_state.recorded = True
     st.balloons()
     st.markdown(f"<div class='result-box'><h2>{res['type']}</h2><p>{res['desc']}</p></div>", unsafe_allow_html=True)
-    if st.button(curr_data["restart_btn"]):
+    if st.button(curr_data["restart_btn"], use_container_width=True):
         st.session_state.step = -1
         st.session_state.answers = []
         st.session_state.recorded = False
