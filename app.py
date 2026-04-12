@@ -38,7 +38,7 @@ def save_result_to_gsheets(final_type):
     except Exception as e:
         pass
 
-# --- 3. 測驗資料內容 (已移除第二題的多餘描述，僅保留A,B,C) ---
+# --- 3. 測驗資料內容 (已對應您截圖的檔名：q2_A.jpg 等) ---
 LANG_MAP = {
     "繁體中文": {
         "title": "輝人靈魂視角測驗",
@@ -49,7 +49,7 @@ LANG_MAP = {
             {
                 "q": "2. 哪一張圖片最能代表你心目中輝人和Ggomo的互動？", 
                 "options": {"A": "A", "B": "B", "C": "C"},
-                "images": {"A": "q2_A.png", "B": "q2_B.png", "C": "q2_C.png"} 
+                "images": {"A": "q2_A.jpg", "B": "q2_B.jpg", "C": "q2_C.jpg"} 
             },
             {"q": "3. 舞台演出中，輝人最吸引你的是？", "options": {"A. 發自內心的享受與開心的笑容": "A", "B. 即興的舞步、talking 時突然的撒嬌": "B", "C. 舉手投足間流露出的魅力、流暢的跳舞線條": "C"}},
             {"q": "4. 輝人的聲音是...", "options": {"A. 午後陽光，溫暖且療癒": "A", "B. 特調咖啡，層次豐富難以捉摸": "B", "C. 陳年紅酒，絲滑迷人且微醺": "C"}},
@@ -75,7 +75,7 @@ LANG_MAP = {
             {
                 "q": "2. 당신이 생각하는 휘인과 꼬모(Ggomo)의 상호작용을 가장 잘 나타내는 사진은?", 
                 "options": {"A": "A", "B": "B", "C": "C"},
-                "images": {"A": "q2_A.png", "B": "q2_B.png", "C": "q2_C.png"}
+                "images": {"A": "q2_A.jpg", "B": "q2_B.jpg", "C": "q2_C.jpg"}
             },
             {"q": "3. 무대 할 때 휘인에게 가장 끌리는 점은?", "options": {"A. 진심으로 즐기는 모습과 행복한 미소.": "A", "B. 즉흥적인 춤, 토크 중 갑작스러운 애교.": "B", "C. 일거수일투족에서 묻어나는 매력, 부드러운 춤선.": "C"}},
             {"q": "4. 휘인의 목소리는...", "options": {"A. 오후의 햇살, 따뜻하고 힐링 돼.": "A", "B. 스페셜티 커피, 다채로운 매력에 예측할 수 없어.": "B", "C. 숙성된 와인, 실크처럼 부드럽고 매혹적이며 살짝 취하게 해.": "C"}},
@@ -83,7 +83,7 @@ LANG_MAP = {
             {"q": "6. 당신이 생각하기에 휘인이 가장 잘 소화하는 스타일은...", "options": {"A. 오버핏 상의와 피티드캡": "A", "B. 화려한 색감의 아트 그래피티 스타일": "B", "C. 세련되고 신비로운 수트 스타일": "C"}},
             {"q": "7. 당신이 생각하기에 휘인의 눈빛이 가장 자주 보여주는 것은...", "options": {"A. 순수하고 호기심 가득한 모습": "A", "B. 엉뚱하고 종잡을 수 없는 모습": "B", "C. 매혹적이고 사연 있어 보이는 모습": "C"}},
             {"q": "8. 콘서트 마지막에 딱 한 곡만 더 들을 수 있다면, 당신의 선택은...", "options": {"A. 〈Wheee〉": "A", "B. 〈EASY〉": "B", "C. 〈Shhh〉": "C"}},
-            {"q": "9. 휘인의 타투가 의미하는 것은...", "options": {"A. 삶에 대한 순수한 사랑과 열정.": "A", "B. 아티스트의 영혼.": "B", "C. 이야기로 가득 찬 과거.": "C"}},
+            {"q": "9. 휘인의 타투가 의미하는 단어는...", "options": {"A. 삶에 대한 순수한 사랑과 열정.": "A", "B. 아티스트의 영혼.": "B", "C. 이야기로 가득 찬 과거.": "C"}},
             {"q": "10. 마마무에서 휘인은...", "options": {"A. 모두의 사랑을 독차지하는 사랑둥이.": "A", "B. 놀라움을 안겨주는 천재.": "B", "C. 그룹의 든든한 기둥.": "C"}}
         ],
         "results": {
@@ -101,7 +101,7 @@ LANG_MAP = {
             {
                 "q": "2. Which picture best represents the interaction between Wheein and Ggomo in your mind?", 
                 "options": {"A": "A", "B": "B", "C": "C"},
-                "images": {"A": "q2_A.png", "B": "q2_B.png", "C": "q2_C.png"}
+                "images": {"A": "q2_A.jpg", "B": "q2_B.jpg", "C": "q2_C.jpg"}
             },
             {"q": "3. What attracts you most about Wheein during stage performances?", "options": {"A. Her genuine enjoyment and happy smile.": "A", "B. Impromptu dance moves, and her sudden aegyo during talking segments.": "B", "C. The charm exuded in her every move, and her smooth dance lines.": "C"}},
             {"q": "4. Wheein's voice is...", "options": {"A. Afternoon sunshine, warm and healing": "A", "B. Specialty coffee, richly layered and unpredictable.": "B", "C. Aged red wine, silky, charming, and slightly intoxicating.": "C"}},
@@ -238,15 +238,16 @@ elif st.session_state.step < len(curr_data["questions"]):
         with cols[idx]:
             # 如果這題有圖片，在按鈕上方顯示圖片
             if has_images and val in q_item["images"]:
+                # 這裡會讀取對應的 jpg 檔案
                 image_base64 = get_base64_file(q_item["images"][val])
                 if image_base64:
                     st.markdown(f"""
                         <div style="text-align: center; margin-bottom: 5px;">
-                            <img src="data:image/png;base64,{image_base64}" style="max-width: 100%; height: auto; border-radius: 10px;">
+                            <img src="data:image/jpeg;base64,{image_base64}" style="max-width: 100%; height: auto; border-radius: 10px;">
                         </div>
                     """, unsafe_allow_html=True)
             
-            # 顯示按鈕 (對第二題來說現在只會顯示 A, B, C)
+            # 顯示按鈕
             if st.button(text, key=f"btn_{st.session_state.step}_{val}", use_container_width=True):
                 st.session_state.answers.append(val)
                 st.session_state.step += 1
