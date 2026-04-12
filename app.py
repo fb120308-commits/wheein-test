@@ -114,25 +114,33 @@ if 'answers' not in st.session_state: st.session_state.answers = []
 if 'lang' not in st.session_state: st.session_state.lang = "繁體中文"
 if 'recorded' not in st.session_state: st.session_state.recorded = False
 
-# 載入所有圖片
 img_header = get_base64_file("Header.png")
 img_middle = get_base64_file("Middle.png")
 img_footer = get_base64_file("Footer.png")
 img_start = get_base64_file("Start screen.png")
 
-# 動態判斷當前背景設定
+# 動態判斷當前背景與隱形成效
 if st.session_state.step == -2:
-    # 封面頁：只顯示 Start screen 且滿版
     current_bg = f'url("data:image/png;base64,{img_start}")' if img_start else "none"
     bg_settings = f"""
         background-image: {current_bg} !important;
         background-position: center center !important;
         background-repeat: no-repeat !important;
-        background-size: contain !important;
+        background-size: cover !important;
     """
-    padding_settings = "padding: 550px 20px 50px 20px !important;" # 讓按鈕在圖片下方
+    # 讓按鈕隱形並撐滿整個 block-container 區域
+    custom_btn_style = """
+        .stButton > button {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw !important;
+            height: 100vh !important;
+            opacity: 0 !important;
+            z-index: 9999;
+            border: none !important;
+        }
+    """
 else:
-    # 測驗頁：原本的三段式背景
     bg_h = f'url("data:image/png;base64,{img_header}")' if img_header else "none"
     bg_f = f'url("data:image/png;base64,{img_footer}")' if img_footer else "none"
     bg_m = f'url("data:image/png;base64,{img_middle}")' if img_middle else "none"
@@ -142,7 +150,7 @@ else:
         background-repeat: no-repeat, no-repeat, repeat-y !important;
         background-size: min(100%, 420px) auto !important;
     """
-    padding_settings = "padding: 280px 20px 300px 20px !important;"
+    custom_btn_style = ""
 
 st.markdown(f"""
     <style>
@@ -154,18 +162,18 @@ st.markdown(f"""
     .block-container {{
         max-width: 420px !important; 
         margin: auto; 
-        {padding_settings}
+        padding: 280px 20px 300px 20px !important;
     }}
-    h1, h2, h3, h4 {{ color: #3d1b1b !important; text-align: center; }}
+    {custom_btn_style}
+    
+    .stButton > button {{ 
+        width: 100%; border-radius: 12px; background: white; color: #b71c1c; 
+        font-weight: bold; border: 1.5px solid #b71c1c; margin-bottom: 5px;
+    }}
     .stMarkdown p {{
         background-color: rgba(255, 255, 255, 0.6);
         padding: 8px 15px !important; 
         border-radius: 10px; 
-        color: #333333 !important;
-    }}
-    .stButton > button {{ 
-        width: 100%; border-radius: 12px; background: white; color: #b71c1c; 
-        font-weight: bold; border: 1.5px solid #b71c1c; margin-bottom: 5px;
     }}
     .result-box {{ 
         background: rgba(255,255,255,0.9); padding: 20px; border-radius: 20px; 
@@ -178,8 +186,8 @@ st.markdown(f"""
 audio_base64 = get_base64_file("bgm.mp3")
 if audio_base64:
     audio_html = f"""
-        <div style="position: relative; z-index: 999; top: -150px; left: -10px; height: 0px;">
-            <audio controls autoplay loop style="height: 35px; width: 44px; opacity: 0.85; border-radius: 50%;">
+        <div style="position: fixed; z-index: 1000; top: 10px; left: 10px;">
+            <audio controls autoplay loop style="height: 35px; width: 44px; opacity: 0.6;">
                 <source src="data:audio/mp3;base64,{audio_base64}" type="audio/mp3">
             </audio>
         </div>
@@ -190,21 +198,21 @@ if audio_base64:
 curr_data = LANG_MAP.get(st.session_state.lang, LANG_MAP["繁體中文"])
 
 if st.session_state.step == -2:
-    # 封面頁只需要放一個進入按鈕，背景已經由 CSS 處理
-    if st.button("START / 進入測驗 / 시작하기", use_container_width=True):
+    # 這裡放置一個全螢幕的隱形按鈕
+    if st.button("INVISIBLE_START_BUTTON"):
         st.session_state.step = -1
         st.rerun()
 
 elif st.session_state.step == -1:
     st.markdown(f"### {curr_data['select_lang']}")
     col1, col2, col3 = st.columns(3)
-    if col1.button("繁體中文", use_container_width=True):
+    if col1.button("繁體中文"):
         st.session_state.lang, st.session_state.step = "繁體中文", 0
         st.rerun()
-    if col2.button("한국어", use_container_width=True):
+    if col2.button("한국어"):
         st.session_state.lang, st.session_state.step = "한국어", 0
         st.rerun()
-    if col3.button("English", use_container_width=True):
+    if col3.button("English"):
         st.session_state.lang, st.session_state.step = "English", 0
         st.rerun()
 
@@ -226,7 +234,7 @@ else:
         st.session_state.recorded = True
     st.balloons()
     st.markdown(f"<div class='result-box'><h2>{res['type']}</h2><p>{res['desc']}</p></div>", unsafe_allow_html=True)
-    if st.button(curr_data["restart_btn"], use_container_width=True):
+    if st.button(curr_data["restart_btn"]):
         st.session_state.step = -1
         st.session_state.answers = []
         st.session_state.recorded = False
