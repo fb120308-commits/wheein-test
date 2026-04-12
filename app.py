@@ -38,7 +38,7 @@ def save_result_to_gsheets(final_type):
     except Exception as e:
         pass
 
-# --- 3. 測驗資料內容 (根據 PDF 更新) ---
+# --- 3. 測驗資料內容 (中、韓、英完全同步) ---
 LANG_MAP = {
     "繁體中文": {
         "title": "輝人靈魂視角測驗",
@@ -55,6 +55,50 @@ LANG_MAP = {
             {"q": "8. 如果演唱會最後只能再聽一首歌，你會選...", "options": {"A. 〈Wheee〉": "A", "B. 〈EASY〉": "B", "C. 〈Shhh〉": "C"}},
             {"q": "9. 你覺得輝人的刺青代表她的...", "options": {"A. 對生活的純真熱愛": "A", "B. 藝術家靈魂": "B", "C. 充滿故事的過往": "C"}},
             {"q": "10. 在 Mamamoo 裡，輝人是...", "options": {"A. 眾人愛的團寵": "A", "B. 帶來驚喜的鬼才": "B", "C. 團體的棟樑": "C"}}
+        ],
+        "results": {
+            "A": {"type": "Puppy", "desc": "Whee, in my world, is a Puppy!"},
+            "B": {"type": "Cat", "desc": "Whee, in my world, is a Cat!"},
+            "C": {"type": "Fox", "desc": "Whee, in my world, is a Fox!"}
+        }
+    },
+    "한국어": {
+        "title": "【휘인 소울 시각 테스트】",
+        "select_lang": "언어를 선택하세요",
+        "restart_btn": "다시 하기",
+        "questions": [
+            {"q": "1. 휘인이 셀카를 올린 것을 봤을 때, 당신의 반응은?", "options": {"A. 꺄악! 어쩜 이렇게 귀여워! 꼬집어주고 싶어.": "A", "B. 역시 정휘인, 이 각도는 그녀만 소화할 수 있지.": "B", "C. 눈빛이 너무 깊고, 분위기 있어.": "C"}},
+            {"q": "2. 당신이 생각하는 휘인과 꼬모(Ggomo)의 상호작용을 가장 잘 나타내는 사진은?", "options": {"A. 따뜻한 일상 속 동반자": "A", "B. 서로 티격태격하지만 떨어질 수 없는 사이": "B", "C. 도도하고 우아한 눈맞춤": "C"}},
+            {"q": "3. 무대 할 때 휘인에게 가장 끌리는 점은?", "options": {"A. 진심으로 즐기는 모습과 행복한 미소.": "A", "B. 즉흥적인 춤, 토크 중 갑작스러운 애교.": "B", "C. 일거수일투족에서 묻어나는 매력, 부드러운 춤선.": "C"}},
+            {"q": "4. 휘인의 목소리는...", "options": {"A. 오후의 햇살, 따뜻하고 힐링 돼.": "A", "B. 스페셜티 커피, 다채로운 매력에 예측할 수 없어.": "B", "C. 숙성된 와인, 실크처럼 부드럽고 매혹적이며 살짝 취하게 해.": "C"}},
+            {"q": "5. 비하인드 영상이나 예능을 볼 때, 당신이 가장 좋아하는 휘인의 모습은...", "options": {"A. 보조개가 깊게 파일 정도로 거침없이 크게 웃을 때.": "A", "B. 멤버들과 게임할 때마다 항상 승자가 될 때.": "B", "C. 혼란스러운 와중에도 성숙한 모습을 보여줄 때.": "C"}},
+            {"q": "6. 당신이 생각하기에 휘인이 가장 잘 소화하는 스타일은...", "options": {"A. 오버핏 상의와 피티드캡": "A", "B. 화려한 색감의 아트 그래피티 스타일": "B", "C. 세련되고 신비로운 수트 스타일": "C"}},
+            {"q": "7. 당신이 생각하기에 휘인의 눈빛이 가장 자주 보여주는 것은...", "options": {"A. 순수하고 호기심 가득한 모습": "A", "B. 엉뚱하고 종잡을 수 없는 모습": "B", "C. 매혹적이고 사연 있어 보이는 모습": "C"}},
+            {"q": "8. 콘서트 마지막에 딱 한 곡만 더 들을 수 있다면, 당신의 선택은...", "options": {"A. 〈Wheee〉": "A", "B. 〈EASY〉": "B", "C. 〈Shhh〉": "C"}},
+            {"q": "9. 휘인의 타투가 의미하는 것은...", "options": {"A. 삶에 대한 순수한 사랑과 열정.": "A", "B. 아티스트의 영혼.": "B", "C. 이야기로 가득 찬 과거.": "C"}},
+            {"q": "10. 마마무에서 휘인은...", "options": {"A. 모두의 사랑을 독차지하는 사랑둥이.": "A", "B. 놀라움을 안겨주는 천재.": "B", "C. 그룹의 든든한 기둥.": "C"}}
+        ],
+        "results": {
+            "A": {"type": "Puppy", "desc": "Whee, in my world, is a Puppy!"},
+            "B": {"type": "Cat", "desc": "Whee, in my world, is a Cat!"},
+            "C": {"type": "Fox", "desc": "Whee, in my world, is a Fox!"}
+        }
+    },
+    "English": {
+        "title": "Whee In Soul Quiz",
+        "select_lang": "Select Language",
+        "restart_btn": "Restart",
+        "questions": [
+            {"q": "1. What is your reaction when you see Wheein post a selfie?", "options": {"A. Wow! How can she be so cute! I want to pinch her cheeks.": "A", "B. As expected of Jung Wheein, only she can pull off this angle.": "B", "C. Her eyes are so deep and elegant.": "C"}},
+            {"q": "2. Which picture best represents the interaction between Wheein and Ggomo in your mind?", "options": {"A. Warm daily companionship": "A", "B. Mutual bickering but inseparable": "B", "C. Cold and elegant eye contact": "C"}},
+            {"q": "3. What attracts you most about Wheein during stage performances?", "options": {"A. Her genuine enjoyment and happy smile.": "A", "B. Impromptu dance moves, and her sudden aegyo during talking segments.": "B", "C. The charm exuded in her every move, and her smooth dance lines.": "C"}},
+            {"q": "4. Wheein's voice is...", "options": {"A. Afternoon sunshine, warm and healing": "A", "B. Specialty coffee, richly layered and unpredictable.": "B", "C. Aged red wine, silky, charming, and slightly intoxicating.": "C"}},
+            {"q": "5. When watching behind-the-scenes or variety shows, you like it most when Wheein...", "options": {"A. Laughs out loud without holding back, showing off her deep dimples.": "A", "B. Ends up being the winner every time she plays games with the members.": "B", "C. Shows her mature side amidst the chaos.": "C"}},
+            {"q": "6. What do you think Wheein can pull off the best...", "options": {"A. Oversized tops and fitted caps.": "A", "B. Bright colored art graffiti style": "B", "C. Sleek and mysterious suit styling": "C"}},
+            {"q": "7. What do you think Wheein's eyes most often reveal...", "options": {"A. Pure and full of curiosity": "A", "B. Quirky and unpredictable": "B", "C. Alluring and full of stories": "C"}},
+            {"q": "8. If you could only listen to one last song at the end of a concert, you would choose...", "options": {"A. 〈Wheee〉": "A", "B. 〈EASY〉": "B", "C. 〈Shhh〉": "C"}},
+            {"q": "9. What do you think Wheein's tattoos represent...", "options": {"A. Her innocent love for life.": "A", "B. Her artistic soul.": "B", "C. A past full of stories.": "C"}},
+            {"q": "10. In Mamamoo, Wheein is...", "options": {"A. The beloved group pet everyone adores.": "A", "B. A genius who always brings surprises.": "B", "C. The reliable pillar of the group.": "C"}}
         ],
         "results": {
             "A": {"type": "Puppy", "desc": "Whee, in my world, is a Puppy!"},
@@ -163,12 +207,11 @@ elif st.session_state.step == -1:
     if col1.button("繁體中文", use_container_width=True):
         st.session_state.lang, st.session_state.step = "繁體中文", 0
         st.rerun()
-    # 韓國語和英文暫時共用中文題目邏輯，如有翻譯需求可再調整
     if col2.button("한국어", use_container_width=True):
-        st.session_state.lang, st.session_state.step = "繁體中文", 0
+        st.session_state.lang, st.session_state.step = "한국어", 0
         st.rerun()
     if col3.button("English", use_container_width=True):
-        st.session_state.lang, st.session_state.step = "繁體中文", 0
+        st.session_state.lang, st.session_state.step = "English", 0
         st.rerun()
 
 elif st.session_state.step < len(curr_data["questions"]):
