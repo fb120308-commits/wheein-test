@@ -38,7 +38,7 @@ def save_result_to_gsheets(final_type):
     except Exception as e:
         pass
 
-# --- 3. 測驗資料內容 (第六題改為圖片題並同步翻譯) ---
+# --- 3. 測驗資料內容 (修正第二題與第六題圖片檔名) ---
 LANG_MAP = {
     "繁體中文": {
         "title": "輝人靈魂視角測驗",
@@ -49,7 +49,7 @@ LANG_MAP = {
             {
                 "q": "2. 哪一張圖片最能代表你心目中輝人和Ggomo的互動？", 
                 "options": {"A": "A", "B": "B", "C": "C"},
-                "images": {"A": "Ggomo-A.jpg", "B": "Ggomo-B.jpg", "C": "Ggomo-C.jpg"} 
+                "images": {"A": "q2_A.jpg", "B": "q2_B.jpg", "C": "q2_C.jpg"} 
             },
             {"q": "3. 舞台演出中，輝人最吸引你的是？", "options": {"A. 發自內心的享受與開心的笑容": "A", "B. 即興的舞步、talking 時突然的撒嬌": "B", "C. 舉手投足間流露出的魅力、流暢的跳舞線條": "C"}},
             {"q": "4. 輝人的聲音是...", "options": {"A. 午後陽光，溫暖且療癒": "A", "B. 特調咖啡，層次豐富難以捉摸": "B", "C. 陳年紅酒，絲滑迷人且微醺": "C"}},
@@ -79,7 +79,7 @@ LANG_MAP = {
             {
                 "q": "2. 당신이 생각하는 휘인과 꼬모(Ggomo)의 상호작용을 가장 잘 나타내는 사진은?", 
                 "options": {"A": "A", "B": "B", "C": "C"},
-                "images": {"A": "Ggomo-A.jpg", "B": "Ggomo-B.jpg", "C": "Ggomo-C.jpg"}
+                "images": {"A": "q2_A.jpg", "B": "q2_B.jpg", "C": "q2_C.jpg"}
             },
             {"q": "3. 무대 할 때 휘인에게 가장 끌리는 점은?", "options": {"A. 진심으로 즐기는 모습과 행복한 미소.": "A", "B. 즉흥적인 춤, 토크 중 갑작스러운 애교.": "B", "C. 일거수일투족에서 묻어나는 매력, 부드러운 춤선.": "C"}},
             {"q": "4. 휘인의 목소리는...", "options": {"A. 오후의 햇살, 따뜻하고 힐링 돼.": "A", "B. 스페셜티 커피, 다채로운 매력에 예측할 수 없어.": "B", "C. 숙성된 와인, 실크처럼 부드럽고 매혹적이며 살짝 취하게 해.": "C"}},
@@ -109,7 +109,7 @@ LANG_MAP = {
             {
                 "q": "2. Which picture best represents the interaction between Wheein and Ggomo in your mind?", 
                 "options": {"A": "A", "B": "B", "C": "C"},
-                "images": {"A": "Ggomo-A.jpg", "B": "Ggomo-B.jpg", "C": "Ggomo-C.jpg"}
+                "images": {"A": "q2_A.jpg", "B": "q2_B.jpg", "C": "q2_C.jpg"}
             },
             {"q": "3. What attracts you most about Wheein during stage performances?", "options": {"A. Her genuine enjoyment and happy smile.": "A", "B. Impromptu dance moves, and her sudden aegyo during talking segments.": "B", "C. The charm exuded in her every move, and her smooth dance lines.": "C"}},
             {"q": "4. Wheein's voice is...", "options": {"A. Afternoon sunshine, warm and healing": "A", "B. Specialty coffee, richly layered and unpredictable.": "B", "C. Aged red wine, silky, charming, and slightly intoxicating.": "C"}},
@@ -250,6 +250,7 @@ elif st.session_state.step < len(curr_data["questions"]):
         with cols[idx]:
             # 如果這題有圖片，在按鈕上方顯示圖片
             if has_images and val in q_item["images"]:
+                # 讀取 JPG 檔案
                 image_base64 = get_base64_file(q_item["images"][val])
                 if image_base64:
                     st.markdown(f"""
