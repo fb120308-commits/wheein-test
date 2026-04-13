@@ -70,7 +70,7 @@ LANG_MAP = {
         }
     },
     "한국어": {
-        "title": "【휘인 소울 시각 테스트】",
+        "title": "",
         "select_lang": "언어를 선택하세요",
         "restart_btn": "다시 하기",
         "questions": [
