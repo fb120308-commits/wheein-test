@@ -42,7 +42,7 @@ def save_result_to_gsheets(final_type):
 LANG_MAP = {
     "繁體中文": {
         "title": "輝人靈魂視角測驗",
-        "select_lang": "請選擇語言 / Select Language",
+        "select_lang": "",
         "restart_btn": "重新測驗",
         "questions": [
             {"q": "1. 看到輝人發了一張自拍，你的反應是？", "options": {"A. 尖叫！怎麼那麼可愛！好想捏": "A", "B. 果然是丁輝人，這個角度只有她撐得住": "B", "C. 眼神好深邃，好有氣質": "C"}},
@@ -72,7 +72,7 @@ LANG_MAP = {
     },
     "한국어": {
         "title": "【휘인 소울 시각 테스트】",
-        "select_lang": "언어를 선택하세요",
+        "select_lang": "",
         "restart_btn": "다시 하기",
         "questions": [
             {"q": "1. 휘인이 셀카를 올린 것을 봤을 때, 당신의 반응은?", "options": {"A. 꺄악! 어쩜 이렇게 귀여워! 꼬집어주고 싶어.": "A", "B. 역시 정휘인, 이 각도는 그녀만 소화할 수 있지.": "B", "C. 눈빛이 너무 깊고, 분위기 있어.": "C"}},
