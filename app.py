@@ -1,6 +1,7 @@
 import streamlit as st
 import base64
 import pandas as pd
+import random
 from collections import Counter
 from streamlit_gsheets import GSheetsConnection
 
@@ -41,7 +42,7 @@ def save_result_to_gsheets(final_type):
 LANG_MAP = {
     "繁體中文": {
         "title": "輝人靈魂視角測驗",
-        "select_lang": "",
+        "select_lang": "請選擇語言 / Select Language",
         "restart_btn": "重新測驗",
         "questions": [
             {"q": "1. 看到輝人發了一張自拍，你的反應是？", "options": {"A. 尖叫！怎麼那麼可愛！好想捏": "A", "B. 果然是丁輝人，這個角度只有她撐得住": "B", "C. 眼神好深邃，好有氣質": "C"}},
@@ -71,7 +72,7 @@ LANG_MAP = {
     },
     "한국어": {
         "title": "【휘인 소울 시각 테스트】",
-        "select_lang": "",
+        "select_lang": "언어를 선택하세요",
         "restart_btn": "다시 하기",
         "questions": [
             {"q": "1. 휘인이 셀카를 올린 것을 봤을 때, 당신의 반응은?", "options": {"A. 꺄악! 어쩜 이렇게 귀여워! 꼬집어주고 싶어.": "A", "B. 역시 정휘인, 이 각도는 그녀만 소화할 수 있지.": "B", "C. 눈빛이 너무 깊고, 분위기 있어.": "C"}},
@@ -134,9 +135,11 @@ LANG_MAP = {
 # --- 4. 狀態管理與動態 CSS ---
 if 'step' not in st.session_state: st.session_state.step = -2
 if 'answers' not in st.session_state: st.session_state.answers = []
-# 將預設語言改為韓文
 if 'lang' not in st.session_state: st.session_state.lang = "한국어"
 if 'recorded' not in st.session_state: st.session_state.recorded = False
+
+# 新增：亂數種子，確保每一輪測驗的選項洗牌都不同
+if 'quiz_seed' not in st.session_state: st.session_state.quiz_seed = random.randint(1, 10000)
 
 # 載入所有圖片資源
 img_header = get_base64_file("Header.png")
@@ -153,7 +156,6 @@ dynamic_bg_css = ""
 container_padding_settings = "padding: 280px 20px 300px 20px !important;"
 start_screen_btn_css = ""
 
-# Fallback 也以韓文為主
 current_data = LANG_MAP.get(st.session_state.lang, LANG_MAP["한국어"])
 num_questions = len(current_data["questions"])
 
@@ -172,7 +174,7 @@ if st.session_state.step == -2:
     """
 
 elif st.session_state.step >= num_questions and st.session_state.step > -1:
-    # 結果頁：根據最高分選項換背景
+    # 結果頁
     if st.session_state.answers:
         counts = Counter(st.session_state.answers)
         winning_code = counts.most_common(1)[0][0] 
@@ -286,7 +288,6 @@ if st.session_state.step == -2:
 elif st.session_state.step == -1:
     st.markdown(f"### {curr_data['select_lang']}")
     col1, col2, col3 = st.columns(3)
-    # 將韓文按鈕放到 col1 (最左邊)
     if col1.button("한국어", use_container_width=True):
         st.session_state.lang, st.session_state.step = "한국어", 0
         st.rerun()
@@ -302,9 +303,17 @@ elif st.session_state.step < len(curr_data["questions"]):
     st.write(f"**{q_item['q']}**")
     
     has_images = "images" in q_item
-    cols = st.columns(len(q_item["options"]))
     
-    for idx, (text, val) in enumerate(q_item["options"].items()):
+    # 將選項轉換為列表並加入洗牌邏輯
+    options_list = list(q_item["options"].items())
+    
+    # 使用 seed 確保同一題如果在背景重新整理時，按鈕不會一直亂跳
+    rng = random.Random(st.session_state.quiz_seed + st.session_state.step)
+    rng.shuffle(options_list)
+    
+    cols = st.columns(len(options_list))
+    
+    for idx, (original_text, val) in enumerate(options_list):
         with cols[idx]:
             if has_images and val in q_item["images"]:
                 image_base64 = get_base64_file(q_item["images"][val])
@@ -315,7 +324,24 @@ elif st.session_state.step < len(curr_data["questions"]):
                         </div>
                     """, unsafe_allow_html=True)
             
-            if st.button(text, key=f"btn_{st.session_state.step}_{val}", use_container_width=True):
+            # --- 隱藏原本的 A. B. C. 標籤邏輯 ---
+            display_text = original_text
+            
+            # 如果是純文字題，切掉開頭的 "A. ", "B. ", "C. "
+            if display_text.startswith(("A. ", "B. ", "C. ")):
+                display_text = display_text[3:]
+            
+            # 如果是圖片題 (原本文字只有 "A", "B", "C")，換成語系對應的動態文字
+            elif display_text in ["A", "B", "C"]:
+                if st.session_state.lang == "한국어":
+                    display_text = "이거 선택!"
+                elif st.session_state.lang == "繁體中文":
+                    display_text = "選這個！"
+                else:
+                    display_text = "Select"
+
+            # 顯示處理過且打亂順序的按鈕
+            if st.button(display_text, key=f"btn_{st.session_state.step}_{val}", use_container_width=True):
                 st.session_state.answers.append(val)
                 st.session_state.step += 1
                 st.rerun()
@@ -343,4 +369,6 @@ else:
         st.session_state.step = -1
         st.session_state.answers = []
         st.session_state.recorded = False
+        # 重新測驗時，更換洗牌種子，產生全新順序！
+        st.session_state.quiz_seed = random.randint(1, 10000)
         st.rerun()
