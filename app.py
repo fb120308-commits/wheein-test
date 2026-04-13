@@ -134,7 +134,8 @@ LANG_MAP = {
 # --- 4. 狀態管理與動態 CSS ---
 if 'step' not in st.session_state: st.session_state.step = -2
 if 'answers' not in st.session_state: st.session_state.answers = []
-if 'lang' not in st.session_state: st.session_state.lang = "繁體中文"
+# 將預設語言改為韓文
+if 'lang' not in st.session_state: st.session_state.lang = "한국어"
 if 'recorded' not in st.session_state: st.session_state.recorded = False
 
 # 載入所有圖片資源
@@ -152,7 +153,8 @@ dynamic_bg_css = ""
 container_padding_settings = "padding: 280px 20px 300px 20px !important;"
 start_screen_btn_css = ""
 
-current_data = LANG_MAP.get(st.session_state.lang, LANG_MAP["繁體中文"])
+# Fallback 也以韓文為主
+current_data = LANG_MAP.get(st.session_state.lang, LANG_MAP["한국어"])
 num_questions = len(current_data["questions"])
 
 if st.session_state.step == -2:
@@ -187,7 +189,6 @@ elif st.session_state.step >= num_questions and st.session_state.step > -1:
                 background-size: 100% auto !important; 
             """
         else:
-            # 萬一真的沒抓到，退回使用普通的三段式背景
             bg_h = f'url("data:image/png;base64,{img_header}")' if img_header else "none"
             bg_f = f'url("data:image/png;base64,{img_footer}")' if img_footer else "none"
             bg_m = f'url("data:image/png;base64,{img_middle}")' if img_middle else "none"
@@ -197,7 +198,7 @@ elif st.session_state.step >= num_questions and st.session_state.step > -1:
                 background-repeat: no-repeat, no-repeat, repeat-y !important;
                 background-size: min(100%, 420px) auto !important;
             """
-    container_padding_settings = "padding: 400px 20px 300px 20px !important;" # 加大 Padding 把按鈕往下推
+    container_padding_settings = "padding: 400px 20px 300px 20px !important;"
 
 else:
     # 正常測驗頁
@@ -238,7 +239,6 @@ st.markdown(f"""
         color: #333333 !important;
     }}
     
-    /* 結果頁文字框透明化 */
     .result-box {{ 
         background: transparent; 
         padding: 10px; 
@@ -276,7 +276,7 @@ if audio_base64:
     st.markdown(audio_html, unsafe_allow_html=True)
 
 # --- 6. 流程控制 ---
-curr_data = LANG_MAP.get(st.session_state.lang, LANG_MAP["繁體中文"])
+curr_data = LANG_MAP.get(st.session_state.lang, LANG_MAP["한국어"])
 
 if st.session_state.step == -2:
     if st.button("CLICK_TO_START"):
@@ -286,11 +286,12 @@ if st.session_state.step == -2:
 elif st.session_state.step == -1:
     st.markdown(f"### {curr_data['select_lang']}")
     col1, col2, col3 = st.columns(3)
-    if col1.button("繁體中文", use_container_width=True):
-        st.session_state.lang, st.session_state.step = "繁體中文", 0
-        st.rerun()
-    if col2.button("한국어", use_container_width=True):
+    # 將韓文按鈕放到 col1 (最左邊)
+    if col1.button("한국어", use_container_width=True):
         st.session_state.lang, st.session_state.step = "한국어", 0
+        st.rerun()
+    if col2.button("繁體中文", use_container_width=True):
+        st.session_state.lang, st.session_state.step = "繁體中文", 0
         st.rerun()
     if col3.button("English", use_container_width=True):
         st.session_state.lang, st.session_state.step = "English", 0
