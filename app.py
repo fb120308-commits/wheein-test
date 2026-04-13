@@ -115,7 +115,7 @@ LANG_MAP = {
             {"q": "4. Wheein's voice is...", "options": {"A. Afternoon sunshine, warm and healing": "A", "B. Specialty coffee, richly layered and unpredictable.": "B", "C. Aged red wine, silky, charming, and slightly intoxicating.": "C"}},
             {"q": "5. When watching behind-the-scenes or variety shows, you like it most when Wheein...", "options": {"A. Laughs out loud without holding back, showing off her deep dimples.": "A", "B. Ends up being the winner every time she plays games with the members.": "B", "C. Shows her mature side amidst the chaos.": "C"}},
             {
-                "q": "6. What do you think Wheein can pull off the best...", 
+                "q": "6. Which outfit do you think Wheein can…", 
                 "options": {"A": "A", "B": "B", "C": "C"},
                 "images": {"A": "q6_A.jpg", "B": "q6_B.jpg", "C": "q6_C.jpg"}
             },
